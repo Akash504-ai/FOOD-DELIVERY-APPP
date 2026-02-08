@@ -1,72 +1,156 @@
-import React from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import SignUp from './pages/SignUp'
-import SignIn from './pages/SignIn'
-import ForgotPassword from './pages/ForgotPassword'
-import useGetCurrentUser from './hooks/useGetCurrentUser'
-import { useDispatch, useSelector } from 'react-redux'
-import Home from './pages/Home'
-import useGetCity from './hooks/useGetCity'
-import useGetMyshop from './hooks/useGetMyShop'
-import CreateEditShop from './pages/CreateEditShop'
-import AddItem from './pages/AddItem'
-import EditItem from './pages/EditItem'
-import useGetShopByCity from './hooks/useGetShopByCity'
-import useGetItemsByCity from './hooks/useGetItemsByCity'
-import CartPage from './pages/CartPage'
-import CheckOut from './pages/CheckOut'
-import OrderPlaced from './pages/OrderPlaced'
-import MyOrders from './pages/MyOrders'
-import useGetMyOrders from './hooks/useGetMyOrders'
-import useUpdateLocation from './hooks/useUpdateLocation'
-import TrackOrderPage from './pages/TrackOrderPage'
-import Shop from './pages/Shop'
-import { useEffect } from 'react'
-import { io } from 'socket.io-client'
-import { setSocket } from './redux/userSlice'
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
 
-export const serverUrl="http://localhost:8000"
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
+import ForgotPassword from "./pages/ForgotPassword";
+import Home from "./pages/Home";
+import CreateEditShop from "./pages/CreateEditShop";
+import AddItem from "./pages/AddItem";
+import EditItem from "./pages/EditItem";
+import CartPage from "./pages/CartPage";
+import CheckOut from "./pages/CheckOut";
+import OrderPlaced from "./pages/OrderPlaced";
+import MyOrders from "./pages/MyOrders";
+import TrackOrderPage from "./pages/TrackOrderPage";
+import Shop from "./pages/Shop";
+
+import useGetCurrentUser from "./hooks/useGetCurrentUser";
+import useGetCity from "./hooks/useGetCity";
+import useGetMyshop from "./hooks/useGetMyShop";
+import useGetShopByCity from "./hooks/useGetShopByCity";
+import useGetItemsByCity from "./hooks/useGetItemsByCity";
+import useGetMyOrders from "./hooks/useGetMyOrders";
+import useUpdateLocation from "./hooks/useUpdateLocation";
+
+export const serverUrl = "http://localhost:8000";
+
+const ProtectedRoute = ({ children }) => {
+  const { userData, loading } = useSelector((state) => state.user);
+
+  if (loading) return null;
+  if (!userData) return <Navigate to="/signin" />;
+
+  return children;
+};
+
 function App() {
-    const {userData}=useSelector(state=>state.user)
-    const dispatch=useDispatch()
-  useGetCurrentUser()
-useUpdateLocation()
-  useGetCity()
-  useGetMyshop()
-  useGetShopByCity()
-  useGetItemsByCity()
-  useGetMyOrders()
+  const { userData, loading } = useSelector((state) => state.user);
 
-  useEffect(()=>{
-const socketInstance=io(serverUrl,{withCredentials:true})
-dispatch(setSocket(socketInstance))
-socketInstance.on('connect',()=>{
-if(userData){
-  socketInstance.emit('identity',{userId:userData._id})
-}
-})
-return ()=>{
-  socketInstance.disconnect()
-}
-  },[userData?._id])
+  useGetCurrentUser();
+  useUpdateLocation();
+  useGetCity();
+  useGetMyshop();
+  useGetShopByCity();
+  useGetItemsByCity();
+  useGetMyOrders();
+
+  useEffect(() => {
+    if (!userData) return;
+
+    const socket = io(serverUrl, { withCredentials: true });
+    socket.emit("identity", { userId: userData._id });
+
+    return () => socket.disconnect();
+  }, [userData?._id]);
+
+  if (loading) return null; // 🚀 THIS FIXES YOUR REFRESH BUG
 
   return (
-   <Routes>
-    <Route path='/signup' element={!userData?<SignUp/>:<Navigate to={"/"}/>}/>
-    <Route path='/signin' element={!userData?<SignIn/>:<Navigate to={"/"}/>}/>
-      <Route path='/forgot-password' element={!userData?<ForgotPassword/>:<Navigate to={"/"}/>}/>
-      <Route path='/' element={userData?<Home/>:<Navigate to={"/signin"}/>}/>
-<Route path='/create-edit-shop' element={userData?<CreateEditShop/>:<Navigate to={"/signin"}/>}/>
-<Route path='/add-item' element={userData?<AddItem/>:<Navigate to={"/signin"}/>}/>
-<Route path='/edit-item/:itemId' element={userData?<EditItem/>:<Navigate to={"/signin"}/>}/>
-<Route path='/cart' element={userData?<CartPage/>:<Navigate to={"/signin"}/>}/>
-<Route path='/checkout' element={userData?<CheckOut/>:<Navigate to={"/signin"}/>}/>
-<Route path='/order-placed' element={userData?<OrderPlaced/>:<Navigate to={"/signin"}/>}/>
-<Route path='/my-orders' element={userData?<MyOrders/>:<Navigate to={"/signin"}/>}/>
-<Route path='/track-order/:orderId' element={userData?<TrackOrderPage/>:<Navigate to={"/signin"}/>}/>
-<Route path='/shop/:shopId' element={userData?<Shop/>:<Navigate to={"/signin"}/>}/>
-   </Routes>
-  )
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/signin" element={!userData ? <SignIn /> : <Navigate to="/" />} />
+      <Route path="/signup" element={!userData ? <SignUp /> : <Navigate to="/" />} />
+      <Route
+        path="/forgot-password"
+        element={!userData ? <ForgotPassword /> : <Navigate to="/" />}
+      />
+
+      {/* Protected Routes */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/create-edit-shop"
+        element={
+          <ProtectedRoute>
+            <CreateEditShop />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-item"
+        element={
+          <ProtectedRoute>
+            <AddItem />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/edit-item/:itemId"
+        element={
+          <ProtectedRoute>
+            <EditItem />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/cart"
+        element={
+          <ProtectedRoute>
+            <CartPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <CheckOut />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/order-placed"
+        element={
+          <ProtectedRoute>
+            <OrderPlaced />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-orders"
+        element={
+          <ProtectedRoute>
+            <MyOrders />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/track-order/:orderId"
+        element={
+          <ProtectedRoute>
+            <TrackOrderPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/shop/:shopId"
+        element={
+          <ProtectedRoute>
+            <Shop />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  );
 }
 
-export default App
+export default App;

@@ -1,85 +1,203 @@
-import axios from 'axios'
-import React from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { serverUrl } from '../App'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { serverUrl } from "../App";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import DeliveryBoyTracking from '../components/DeliveryBoyTracking'
-import { useSelector } from 'react-redux'
+import {
+  FiPackage,
+  FiMapPin,
+  FiPhone,
+  FiUser,
+  FiCheckCircle,
+  FiClock,
+  FiTruck,
+} from "react-icons/fi";
+import DeliveryBoyTracking from "../components/DeliveryBoyTracking";
+import { socket } from "../socket";
+
 function TrackOrderPage() {
-    const { orderId } = useParams()
-    const [currentOrder, setCurrentOrder] = useState() 
-    const navigate = useNavigate()
-    const {socket}=useSelector(state=>state.user)
-    const [liveLocations,setLiveLocations]=useState({})
-    const handleGetOrder = async () => {
-        try {
-            const result = await axios.get(`${serverUrl}/api/order/get-order-by-id/${orderId}`, { withCredentials: true })
-            setCurrentOrder(result.data)
-        } catch (error) {
-            console.log(error)
-        }
+  const { orderId } = useParams();
+  const navigate = useNavigate();
+
+  const [currentOrder, setCurrentOrder] = useState(null);
+  const [liveLocations, setLiveLocations] = useState({});
+
+  /* ================= API ================= */
+  const handleGetOrder = async () => {
+    try {
+      const res = await axios.get(
+        `${serverUrl}/api/order/get-order-by-id/${orderId}`,
+        { withCredentials: true }
+      );
+      setCurrentOrder(res.data);
+    } catch (err) {
+      console.error(err);
     }
+  };
 
-    useEffect(()=>{
-socket.on('updateDeliveryLocation',({deliveryBoyId,latitude,longitude})=>{
-setLiveLocations(prev=>({
-  ...prev,
-  [deliveryBoyId]:{lat:latitude,lon:longitude}
-}))
-})
-    },[socket])
+  /* ================= INITIAL FETCH ================= */
+  useEffect(() => {
+    if (!orderId) return;
+    handleGetOrder();
+  }, [orderId]);
 
-    useEffect(() => {
-        handleGetOrder()
-    }, [orderId])
-    return (
-        <div className='max-w-4xl mx-auto p-4 flex flex-col gap-6'>
-            <div className='relative flex items-center gap-4 top-[20px] left-[20px] z-[10] mb-[10px]' onClick={() => navigate("/")}>
-                <IoIosArrowRoundBack size={35} className='text-[#ff4d2d]' />
-                <h1 className='text-2xl font-bold md:text-center'>Track Order</h1>
-            </div>
-      {currentOrder?.shopOrders?.map((shopOrder,index)=>(
-        <div className='bg-white p-4 rounded-2xl shadow-md border border-orange-100 space-y-4' key={index}>
-         <div>
-            <p className='text-lg font-bold mb-2 text-[#ff4d2d]'>{shopOrder.shop.name}</p>
-            <p className='font-semibold'><span>Items:</span> {shopOrder.shopOrderItems?.map(i=>i.name).join(",")}</p>
-            <p><span className='font-semibold'>Subtotal:</span> {shopOrder.subtotal}</p>
-            <p className='mt-6'><span className='font-semibold'>Delivery address:</span> {currentOrder.deliveryAddress?.text}</p>
-         </div>
-         {shopOrder.status!="delivered"?<>
-{shopOrder.assignedDeliveryBoy?
-<div className='text-sm text-gray-700'>
-<p className='font-semibold'><span>Delivery Boy Name:</span> {shopOrder.assignedDeliveryBoy.fullName}</p>
-<p className='font-semibold'><span>Delivery Boy contact No.:</span> {shopOrder.assignedDeliveryBoy.mobile}</p>
-</div>:<p className='font-semibold'>Delivery Boy is not assigned yet.</p>}
-         </>:<p className='text-green-600 font-semibold text-lg'>Delivered</p>}
+  /* ================= POLLING ================= */
+  useEffect(() => {
+    if (!orderId) return;
 
-{(shopOrder.assignedDeliveryBoy && shopOrder.status !== "delivered") && (
-  <div className="h-[400px] w-full rounded-2xl overflow-hidden shadow-md">
-    <DeliveryBoyTracking data={{
-      deliveryBoyLocation:liveLocations[shopOrder.assignedDeliveryBoy._id] || {
-        lat: shopOrder.assignedDeliveryBoy.location.coordinates[1],
-        lon: shopOrder.assignedDeliveryBoy.location.coordinates[0]
+    const interval = setInterval(handleGetOrder, 15000);
+    return () => clearInterval(interval);
+  }, [orderId]);
+
+  /* ================= SOCKET ================= */
+  useEffect(() => {
+    if (!orderId) return;
+
+    const handler = ({ deliveryBoyId, latitude, longitude }) => {
+      setLiveLocations(prev => ({
+        ...prev,
+        [deliveryBoyId]: { lat: latitude, lon: longitude },
+      }));
+    };
+
+    socket.on("updateDeliveryLocation", handler);
+    return () => socket.off("updateDeliveryLocation", handler);
+  }, [orderId]);
+
+  /* ================= STEPPER ================= */
+  const StatusStepper = ({ status, hasDeliveryBoy }) => {
+    const steps = [
+      { label: "Confirmed", icon: <FiCheckCircle />, active: true },
+      {
+        label: "Preparing",
+        icon: <FiClock />,
+        active: ["preparing", "out-for-delivery", "delivered"].includes(status),
       },
-      customerLocation: {
-        lat: currentOrder.deliveryAddress.latitude,
-        lon: currentOrder.deliveryAddress.longitude
-      }
-    }} />
-  </div>
-)}
+      {
+        label: "On the way",
+        icon: <FiTruck />,
+        active:
+          status === "out-for-delivery" ||
+          status === "delivered" ||
+          hasDeliveryBoy,
+      },
+      {
+        label: "Delivered",
+        icon: <FiPackage />,
+        active: status === "delivered",
+      },
+    ];
 
+    return (
+      <div className="flex justify-between items-center mb-8 px-2">
+        {steps.map((step, i) => (
+          <div key={i} className="flex flex-col items-center flex-1 relative">
+            <div
+              className={`z-10 w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${
+                step.active
+                  ? "bg-[#ff4d2d] border-[#ff4d2d] text-white"
+                  : "bg-white border-gray-200 text-gray-400"
+              }`}
+            >
+              {step.icon}
+            </div>
 
+            <span
+              className={`text-[10px] mt-2 font-bold uppercase tracking-tighter ${
+                step.active ? "text-[#ff4d2d]" : "text-gray-400"
+              }`}
+            >
+              {step.label}
+            </span>
 
+            {i !== steps.length - 1 && (
+              <div
+                className={`absolute top-5 left-1/2 w-full h-[2px] -z-0 ${
+                  step.active ? "bg-[#ff4d2d]" : "bg-gray-100"
+                }`}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-[#fcfcfc] pb-20">
+      {/* Header */}
+      <div className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-gray-100">
+        <div className="max-w-4xl mx-auto p-5 flex items-center gap-3">
+          <button
+            onClick={() => navigate("/")}
+            className="p-2 hover:bg-orange-50 rounded-xl transition-all"
+          >
+            <IoIosArrowRoundBack size={32} />
+          </button>
+
+          <div>
+            <h1 className="text-xl font-black">Live Tracking</h1>
+            <p className="text-xs text-gray-500">
+              Order ID: #{orderId?.slice(-6)}
+            </p>
+          </div>
         </div>
-      ))}
+      </div>
 
+      {/* Content */}
+      <div className="max-w-4xl mx-auto p-4 mt-6 space-y-10">
+        {currentOrder?.shopOrders?.map((shopOrder, index) => {
+          const canShowMap =
+            shopOrder.assignedDeliveryBoy &&
+            (liveLocations[shopOrder.assignedDeliveryBoy._id] ||
+              shopOrder.assignedDeliveryBoy.location);
 
+          return (
+            <div
+              key={index}
+              className="bg-white rounded-[2.5rem] shadow border overflow-hidden"
+            >
+              <div className="p-8 pb-0">
+                <StatusStepper
+                  status={shopOrder.status}
+                  hasDeliveryBoy={!!shopOrder.assignedDeliveryBoy}
+                />
+              </div>
 
-        </div>
-    )
+              <div className="p-8 space-y-6">
+                {shopOrder.assignedDeliveryBoy && (
+                  <div className="h-[450px] rounded-[2rem] overflow-hidden border">
+                    {canShowMap && (
+                      <DeliveryBoyTracking
+                        data={{
+                          deliveryBoyLocation:
+                            liveLocations[shopOrder.assignedDeliveryBoy._id] || {
+                              lat: shopOrder.assignedDeliveryBoy.location.coordinates[1],
+                              lon: shopOrder.assignedDeliveryBoy.location.coordinates[0],
+                            },
+                          customerLocation: {
+                            lat: currentOrder.deliveryAddress.latitude,
+                            lon: currentOrder.deliveryAddress.longitude,
+                          },
+                        }}
+                      />
+                    )}
+                  </div>
+                )}
+
+                <div className="flex gap-4 p-5 bg-gray-50 rounded-2xl">
+                  <FiMapPin className="text-[#ff4d2d] mt-1" />
+                  <p className="font-bold">
+                    {currentOrder.deliveryAddress?.text}
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
-export default TrackOrderPage
+export default TrackOrderPage;
