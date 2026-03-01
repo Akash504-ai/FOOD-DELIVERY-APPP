@@ -6,6 +6,9 @@ import { sendDeliveryOtpMail } from "../utils/mail.js";
 import RazorPay from "razorpay";
 import dotenv from "dotenv";
 import { count } from "console";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 dotenv.config();
 let instance = new RazorPay({
@@ -35,7 +38,7 @@ export const placeOrder = async (req, res) => {
         const items = groupItemsByShop[shopId];
         const subtotal = items.reduce(
           (sum, i) => sum + Number(i.price) * Number(i.quantity),
-          0
+          0,
         );
 
         return {
@@ -49,7 +52,7 @@ export const placeOrder = async (req, res) => {
             name: i.name,
           })),
         };
-      })
+      }),
     );
 
     const newOrder = await Order.create({
@@ -58,7 +61,38 @@ export const placeOrder = async (req, res) => {
       deliveryAddress,
       totalAmount,
       shopOrders,
+      payment: false,
     });
+
+    // 🔥 IF STRIPE SELECTED
+    if (paymentMethod === "stripe") {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items: [
+          {
+            price_data: {
+              currency: "inr",
+              product_data: {
+                name: `Order #${newOrder._id}`,
+              },
+              unit_amount: totalAmount * 100,
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          orderId: newOrder._id.toString(),
+        },
+        success_url: `http://localhost:5173/payment-success?orderId=${newOrder._id}`,
+        cancel_url: `http://localhost:5173/payment-failed`,
+      });
+
+      return res.status(200).json({
+        paymentGateway: "stripe",
+        checkoutUrl: session.url,
+      });
+    }
 
     await newOrder.populate("shopOrders.owner", "socketId");
 
@@ -79,7 +113,10 @@ export const placeOrder = async (req, res) => {
 
     return res.status(201).json(newOrder);
   } catch (error) {
-    return res.status(500).json({ message: `place order error ${error}` });
+    console.log("PLACE ORDER ERROR:", error);
+    return res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
@@ -354,7 +391,7 @@ export const acceptOrder = async (req, res) => {
         status: "assigned",
         acceptedAt: new Date(),
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedAssignment) {

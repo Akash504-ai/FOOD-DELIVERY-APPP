@@ -16,6 +16,20 @@ const customerIcon = new L.Icon({
 })
 function DeliveryBoyTracking({ data }) {
 
+    if (
+        !data ||
+        !data.deliveryBoyLocation ||
+        !data.customerLocation ||
+        !data.deliveryBoyLocation.lat ||
+        !data.deliveryBoyLocation.lon ||
+        !data.customerLocation.lat ||
+        !data.customerLocation.lon
+    ) {
+        return <div className="w-full h-[400px] flex items-center justify-center">
+            Loading map...
+        </div>
+    }
+
     const deliveryBoyLat = data.deliveryBoyLocation.lat
     const deliveryBoylon = data.deliveryBoyLocation.lon
     const customerLat = data.customerLocation.lat
@@ -36,19 +50,19 @@ function DeliveryBoyTracking({ data }) {
                 zoom={16}
             >
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution='&copy; OpenStreetMap contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-             <Marker position={[deliveryBoyLat,deliveryBoylon]} icon={deliveryBoyIcon}>
-             <Popup>Delivery Boy</Popup>
-             </Marker>
-              <Marker position={[customerLat,customerlon]} icon={customerIcon}>
-             <Popup>Delivery Boy</Popup>
-             </Marker>
 
+                <Marker position={[deliveryBoyLat, deliveryBoylon]} icon={deliveryBoyIcon}>
+                    <Popup>Delivery Boy</Popup>
+                </Marker>
 
-<Polyline positions={path} color='blue' weight={4}/>
+                <Marker position={[customerLat, customerlon]} icon={customerIcon}>
+                    <Popup>Customer</Popup>
+                </Marker>
 
+                <Polyline positions={path} color='blue' weight={4}/>
             </MapContainer>
         </div>
     )

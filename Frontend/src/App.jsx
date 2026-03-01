@@ -16,6 +16,7 @@ import OrderPlaced from "./pages/OrderPlaced";
 import MyOrders from "./pages/MyOrders";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import Shop from "./pages/Shop";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
 import useGetCity from "./hooks/useGetCity";
@@ -61,8 +62,14 @@ function App() {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/signin" element={!userData ? <SignIn /> : <Navigate to="/" />} />
-      <Route path="/signup" element={!userData ? <SignUp /> : <Navigate to="/" />} />
+      <Route
+        path="/signin"
+        element={!userData ? <SignIn /> : <Navigate to="/" />}
+      />
+      <Route
+        path="/signup"
+        element={!userData ? <SignUp /> : <Navigate to="/" />}
+      />
       <Route
         path="/forgot-password"
         element={!userData ? <ForgotPassword /> : <Navigate to="/" />}
@@ -146,6 +153,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Shop />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/payment-success"
+        element={
+          <ProtectedRoute>
+            <PaymentSuccess />
           </ProtectedRoute>
         }
       />

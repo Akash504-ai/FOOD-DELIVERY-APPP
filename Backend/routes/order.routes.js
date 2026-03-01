@@ -2,9 +2,6 @@ import express from "express"
 import isAuth from "../middlewares/isAuth.js"
 import { acceptOrder, getCurrentOrder, getDeliveryBoyAssignment, getMyOrders, getOrderById, getTodayDeliveries, placeOrder, sendDeliveryOtp, updateOrderStatus, verifyDeliveryOtp, verifyPayment } from "../controllers/order.controllers.js"
 
-
-
-
 const orderRouter=express.Router()
 
 orderRouter.post("/place-order",isAuth,placeOrder)
