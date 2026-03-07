@@ -26,7 +26,7 @@ import useGetItemsByCity from "./hooks/useGetItemsByCity";
 import useGetMyOrders from "./hooks/useGetMyOrders";
 import useUpdateLocation from "./hooks/useUpdateLocation";
 
-export const serverUrl = "http://localhost:8000";
+export const serverUrl = "http://localhost:5000";
 
 const ProtectedRoute = ({ children }) => {
   const { userData, loading } = useSelector((state) => state.user);

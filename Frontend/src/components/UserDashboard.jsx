@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/moving-border";
 import Footer from "./Footer";
 import { motion } from "framer-motion";
+import HomeRecommendations from "./HomeRecommendations.jsx";
 
 function UserDashboard() {
   const { currentCity, shopInMyCity, itemsInMyCity, searchItems } = useSelector(
@@ -256,6 +257,10 @@ function UserDashboard() {
           </div>
         </div>
       </section>
+
+      {/* posted here */}
+
+      <HomeRecommendations itemId="69863900b4b3a91c291be101" />
 
       {/* --- CURATED ITEMS --- */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 mb-24">
