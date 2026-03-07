@@ -15,4 +15,4 @@ def recommend(item_id: str):
         "recommendations": scores.index.tolist()
     }
 
-#  uvicorn main:app --reload
+# run using this ---> uvicorn main:app --reload
