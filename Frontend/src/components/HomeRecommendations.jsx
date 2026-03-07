@@ -12,7 +12,6 @@ function HomeRecommendations({ itemId }) {
   const [canScrollRight, setCanScrollRight] = useState(true);
   const scrollRef = useRef();
 
-  // Handle Fetching
   useEffect(() => {
     const fetchRecommendations = async () => {
       if (!itemId) return;
@@ -29,7 +28,6 @@ function HomeRecommendations({ itemId }) {
     fetchRecommendations();
   }, [itemId]);
 
-  // Update button visibility on scroll
   const checkScrollLimits = () => {
     if (!scrollRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
