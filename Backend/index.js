@@ -26,9 +26,8 @@ const io=new Server(server,{
 }
 })
 
+//socket for live tracking........
 app.set("io",io)
-
-
 
 const port=process.env.PORT || 5000
 app.use(cors({
