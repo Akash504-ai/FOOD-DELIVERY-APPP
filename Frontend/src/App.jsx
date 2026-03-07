@@ -57,7 +57,7 @@ function App() {
     return () => socket.disconnect();
   }, [userData?._id]);
 
-  if (loading) return null; // 🚀 THIS FIXES YOUR REFRESH BUG
+  if (loading) return null; 
 
   return (
     <Routes>
