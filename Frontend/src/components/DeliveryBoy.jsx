@@ -190,7 +190,7 @@ function DeliveryBoy() {
 
       <div className="w-full max-w-[850px] flex flex-col gap-8 items-center pt-24 px-4">
         {/* Welcome Card & Real-time Location */}
-        <div className="w-full bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+        <div className="w-full bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-300 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left mt-[-70px]">
           <div>
             <h1 className="text-2xl font-black text-gray-900 tracking-tight">
               Welcome back,{" "}
@@ -211,7 +211,7 @@ function DeliveryBoy() {
 
         {/* Analytics & Earnings Section */}
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-[2rem] shadow-sm p-6 border border-gray-100">
+          <div className="bg-white rounded-[2rem] shadow-sm p-6 border border-gray-300">
             <h3 className="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
               📊 Today's Activity
             </h3>
@@ -267,7 +267,7 @@ function DeliveryBoy() {
 
         {/* Available Orders Section */}
         {!currentOrder?.shopOrder && (
-          <div className="w-full bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100">
+          <div className="w-full bg-white rounded-[2rem] p-8 shadow-sm border border-gray-300">
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-xl font-black text-gray-800 flex items-center gap-2">
                 🛰️ Nearby Tasks
