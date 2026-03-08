@@ -159,9 +159,13 @@ function UserDashboard() {
 
             <p className="text-gray-500 text-base md:text-lg max-w-md font-medium">
               Explore thousands of flavors from top-rated restaurants in{" "}
-              <span className="text-gray-900 underline decoration-orange-300 decoration-2 underline-offset-4">
-                {currentCity || "your area"}
-              </span>{" "}
+              <Tooltip
+                content={`Showing restaurants available in ${currentCity || "your area"}`}
+              >
+                <span className="text-gray-900 underline decoration-orange-300 decoration-2 underline-offset-4 cursor-help">
+                  {currentCity || "your area"}
+                </span>
+              </Tooltip>{" "}
               delivered home.
             </p>
 
@@ -235,14 +239,28 @@ function UserDashboard() {
             whileHover={{ animationPlayState: "paused" }}
           >
             {duplicatedCategories.map((cate, index) => (
-              <div key={index} className="flex-shrink-0">
-                <CategoryCard
-                  name={cate.category}
-                  image={cate.image}
-                  active={activeCategory === cate.category}
-                  onClick={() => handleFilterByCategory(cate.category)}
-                />
-              </div>
+             <div key={index} className="flex-shrink-0">
+  <Tooltip
+    content={
+      <div className="flex items-center gap-3">
+        <img
+          src={cate.image}
+          className="w-10 h-10 rounded-md object-cover"
+        />
+        <span className="font-semibold">{cate.category}</span>
+      </div>
+    }
+  >
+    <div>
+      <CategoryCard
+        name={cate.category}
+        image={cate.image}
+        active={activeCategory === cate.category}
+        onClick={() => handleFilterByCategory(cate.category)}
+      />
+    </div>
+  </Tooltip>
+</div>
             ))}
           </motion.div>
         </div>
