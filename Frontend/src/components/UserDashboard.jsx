@@ -27,6 +27,13 @@ function UserDashboard() {
   const [updatedItemsList, setUpdatedItemsList] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
   const duplicatedCategories = [...categories, ...categories];
+  // 1. At the top of your component, add this state:
+  const [visibleCount, setVisibleCount] = useState(8);
+
+  // 2. Add a function to handle loading more:
+  const loadMoreItems = () => {
+    setVisibleCount((prevCount) => prevCount + 8); // Increase by 8 each time
+  };
 
   const handleFilterByCategory = (category) => {
     setActiveCategory(category);
@@ -135,7 +142,7 @@ function UserDashboard() {
               borderRadius="1.75rem"
               duration={3500}
               containerClassName="w-fit h-auto p-[1.5px]"
-              borderClassName="bg-[radial-gradient(#ff4d2d_40%,transparent_60%)]"
+              borderClassName="bg-[radial-gradient(#ff4d2d_30%,#ff4d2d80_55%,transparent_70%)]"
               className="bg-white/90 backdrop-blur-md text-gray-900 font-black px-6 py-3 border-none flex items-center gap-2 shadow-sm"
             >
               <span className="animate-bounce">🚀</span>
@@ -284,16 +291,33 @@ function UserDashboard() {
           <div className="h-[2px] w-full bg-gradient-to-r from-orange-100 to-transparent" />
         </div>
 
+        {/* Slice the list to show only the visibleCount */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
-          {updatedItemsList?.map((item, index) => (
-            <div
+          {updatedItemsList?.slice(0, visibleCount).map((item, index) => (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               key={index}
               className="hover:scale-105 transition-transform duration-300"
             >
               <FoodCard data={item} />
-            </div>
+            </motion.div>
           ))}
         </div>
+
+        {/* --- SEE MORE BUTTON --- */}
+        {updatedItemsList && visibleCount < updatedItemsList.length && (
+          <div className="flex justify-center mt-16">
+            <button
+              onClick={loadMoreItems}
+              className="group relative px-8 py-3 bg-white border-2 border-[#ff4d2d] text-[#ff4d2d] font-bold rounded-2xl hover:bg-[#ff4d2d] hover:text-white transition-all duration-300 shadow-lg shadow-orange-100 flex items-center gap-2"
+            >
+              See More Delicious Bites
+              <FaChevronRight className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        )}
       </section>
 
       <Footer />
