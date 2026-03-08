@@ -264,15 +264,27 @@ function UserDashboard() {
             ref={shopScrollRef}
           >
             {shopInMyCity?.map((shop, index) => (
-              <div
+              <Tooltip
                 key={index}
-                className="min-w-[180px] md:min-w-[240px] flex-shrink-0 cursor-pointer hover:-translate-y-4 transition-all duration-500"
-                onClick={() => navigate(`/shop/${shop._id}`)}
+                content={
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={shop.image}
+                      className="w-10 h-10 rounded-md object-cover"
+                    />
+                    <span className="font-semibold">{shop.name}</span>
+                  </div>
+                }
               >
-                <div className="bg-white p-2 rounded-[2.5rem] shadow-lg border border-orange-50">
-                  <CategoryCard name={shop.name} image={shop.image} />
+                <div
+                  className="min-w-[180px] md:min-w-[240px] flex-shrink-0 cursor-pointer hover:-translate-y-4 transition-all duration-500"
+                  onClick={() => navigate(`/shop/${shop._id}`)}
+                >
+                  <div className="bg-white p-2 rounded-[2.5rem] shadow-lg border border-orange-50">
+                    <CategoryCard name={shop.name} image={shop.image} />
+                  </div>
                 </div>
-              </div>
+              </Tooltip>
             ))}
           </div>
         </div>
