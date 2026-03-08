@@ -58,103 +58,98 @@ function SignUp() {
         }
     }
 
-    return (
-        <div className="min-h-screen w-full flex items-center justify-center p-6 bg-gradient-to-br from-[#fff9f6] to-[#fff1ed]">
-            {/* Background Decorative Blobs */}
-            <div className="fixed top-[-10%] left-[-10%] w-96 h-96 bg-orange-100 rounded-full blur-[120px] opacity-60 pointer-events-none" />
-            <div className="fixed bottom-[-10%] right-[-10%] w-96 h-96 bg-red-100 rounded-full blur-[120px] opacity-60 pointer-events-none" />
+    // UPDATED: High Contrast Input Styles
+    const inputWrapper = "relative group space-y-1.5";
+    const inputIcon = "absolute left-4 top-[38px] text-gray-400 group-focus-within:text-[#ff4d2d] transition-colors duration-300 z-10";
+    const inputClass = "w-full bg-gray-50 border border-gray-300 rounded-2xl pl-12 pr-4 py-3.5 outline-none focus:bg-white focus:border-[#ff4d2d] focus:ring-4 focus:ring-[#ff4d2d]/10 transition-all font-medium text-gray-800 placeholder:text-gray-400";
 
-            <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(255,77,45,0.1)] w-full max-w-lg p-10 border border-white z-10 relative overflow-hidden">
+    return (
+        // STEP 1: Page Background - bg-gray-100
+        <div className="min-h-screen w-full flex items-center justify-center p-4 md:p-6 bg-gray-100 relative">
+            
+            {/* STEP 2: Main Card - bg-white, border-gray-300, soft shadows */}
+            <div className="bg-white border border-gray-300 rounded-[3rem] shadow-[0_8px_30px_rgba(0,0,0,0.06)] w-full max-w-[500px] p-8 md:p-12 z-10 relative overflow-hidden">
                 
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl font-black mb-2 tracking-tight" style={{ color: primaryColor }}>
-                        Vingo<span className="text-gray-800">.</span>
-                    </h1>
-                    <p className="text-gray-500 font-medium">Create your account to start ordering!</p>
+                <div className="text-center mb-10">
+                    <div className="inline-block px-4 py-2 rounded-2xl bg-gray-50 border border-gray-300 mb-4">
+                        <h1 className="text-4xl font-[1000] tracking-tighter italic" style={{ color: primaryColor }}>
+                            Vingo<span className="text-gray-900">.</span>
+                        </h1>
+                    </div>
+                    <p className="text-gray-500 font-bold text-xs uppercase tracking-[0.2em] opacity-70">Create Account</p>
                 </div>
 
                 <div className="space-y-5">
                     {/* Full Name */}
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Full Name</label>
-                        <div className="relative group">
-                            <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#ff4d2d] transition-colors" />
-                            <input 
-                                type="text" 
-                                className="w-full bg-gray-50 border-none rounded-2xl pl-11 pr-4 py-3.5 outline-none focus:ring-2 focus:ring-[#ff4d2d]/20 transition-all font-medium text-gray-800"
-                                placeholder="John Doe" 
-                                onChange={(e) => setFullName(e.target.value)} 
-                                value={fullName} 
-                                required
-                            />
-                        </div>
+                    <div className={inputWrapper}>
+                        <label className="text-[11px] font-black text-gray-500 uppercase tracking-widest ml-1">Full Name</label>
+                        <FaUser className={inputIcon} />
+                        <input 
+                            type="text" 
+                            className={inputClass}
+                            placeholder="e.g. John Doe" 
+                            onChange={(e) => setFullName(e.target.value)} 
+                            value={fullName} 
+                            required
+                        />
                     </div>
 
-                    {/* Email */}
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Email Address</label>
-                        <div className="relative group">
-                            <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#ff4d2d] transition-colors" />
+                    {/* Email & Phone Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className={inputWrapper}>
+                            <label className="text-[11px] font-black text-gray-500 uppercase tracking-widest ml-1">Email</label>
+                            <FaEnvelope className={inputIcon} />
                             <input 
                                 type="email" 
-                                className="w-full bg-gray-50 border-none rounded-2xl pl-11 pr-4 py-3.5 outline-none focus:ring-2 focus:ring-[#ff4d2d]/20 transition-all font-medium text-gray-800"
-                                placeholder="name@example.com" 
+                                className={inputClass}
+                                placeholder="mail@xyz.com" 
                                 onChange={(e) => setEmail(e.target.value)} 
                                 value={email} 
-                                required
                             />
                         </div>
-                    </div>
-
-                    {/* Mobile */}
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Mobile Number</label>
-                        <div className="relative group">
-                            <FaPhoneAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#ff4d2d] transition-colors" />
+                        <div className={inputWrapper}>
+                            <label className="text-[11px] font-black text-gray-500 uppercase tracking-widest ml-1">Phone</label>
+                            <FaPhoneAlt className={inputIcon} />
                             <input 
                                 type="tel" 
-                                className="w-full bg-gray-50 border-none rounded-2xl pl-11 pr-4 py-3.5 outline-none focus:ring-2 focus:ring-[#ff4d2d]/20 transition-all font-medium text-gray-800"
-                                placeholder="+91 XXXXX XXXXX" 
+                                className={inputClass}
+                                placeholder="10 Digit No." 
                                 onChange={(e) => setMobile(e.target.value)} 
                                 value={mobile} 
-                                required
                             />
                         </div>
                     </div>
 
                     {/* Password */}
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Password</label>
-                        <div className="relative group">
-                            <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#ff4d2d] transition-colors" />
-                            <input 
-                                type={showPassword ? "text" : "password"} 
-                                className="w-full bg-gray-50 border-none rounded-2xl pl-11 pr-12 py-3.5 outline-none focus:ring-2 focus:ring-[#ff4d2d]/20 transition-all font-medium text-gray-800"
-                                placeholder="Min. 8 characters" 
-                                onChange={(e) => setPassword(e.target.value)} 
-                                value={password} 
-                                required
-                            />
-                            <button 
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#ff4d2d] transition-colors" 
-                                onClick={() => setShowPassword(prev => !prev)}
-                            >
-                                {!showPassword ? <FaRegEye size={18} /> : <FaRegEyeSlash size={18} />}
-                            </button>
-                        </div>
+                    <div className={inputWrapper}>
+                        <label className="text-[11px] font-black text-gray-500 uppercase tracking-widest ml-1">Password</label>
+                        <FaLock className={inputIcon} />
+                        <input 
+                            type={showPassword ? "text" : "password"} 
+                            className={inputClass}
+                            placeholder="••••••••" 
+                            onChange={(e) => setPassword(e.target.value)} 
+                            value={password} 
+                        />
+                        <button 
+                            className="absolute right-4 top-[38px] text-gray-400 hover:text-[#ff4d2d] transition-colors p-1" 
+                            onClick={() => setShowPassword(prev => !prev)}
+                        >
+                            {!showPassword ? <FaRegEye size={18} /> : <FaRegEyeSlash size={18} />}
+                        </button>
                     </div>
 
-                    {/* Role Selector */}
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-3 ml-1">Join as a</label>
-                        <div className="flex p-1 bg-gray-100 rounded-2xl gap-1">
+                    {/* Role Selector - STEP 3: Inner boxes using bg-gray-50 */}
+                    <div className="bg-gray-50 border border-gray-300 p-2 rounded-2xl mt-2">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block text-center mb-2">Join as</label>
+                        <div className="flex gap-1">
                             {["user", "owner", "deliveryBoy"].map((r) => (
                                 <button
                                     key={r}
-                                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold capitalize transition-all duration-300 ${
+                                    className={`flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-300 border ${
                                         role === r 
-                                        ? "bg-white text-[#ff4d2d] shadow-sm" 
-                                        : "text-gray-500 hover:text-gray-700"
+                                        ? "bg-white border-gray-300 text-[#ff4d2d] shadow-sm scale-[1.02]" 
+                                        : "bg-transparent border-transparent text-gray-400 hover:text-gray-600"
                                     }`}
                                     onClick={() => setRole(r)}
                                 >
@@ -164,43 +159,44 @@ function SignUp() {
                         </div>
                     </div>
 
+                    {/* Create Account Button - STEP 6: Strong Shadow */}
                     <button 
-                        className="w-full bg-[#ff4d2d] text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-200 hover:bg-[#e64323] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center" 
+                        className="w-full bg-[#ff4d2d] text-white font-black py-4 rounded-[1.5rem] shadow-[0_20px_40px_rgba(255,77,45,0.25)] hover:shadow-[0_25px_50px_rgba(255,77,45,0.35)] transition-all transform hover:-translate-y-1 active:scale-[0.98] flex items-center justify-center gap-2 mt-4" 
                         onClick={handleSignUp} 
                         disabled={loading}
                     >
-                        {loading ? <ClipLoader size={20} color='white'/> : "Create Account"}
+                        {loading ? <ClipLoader size={20} color='white'/> : "Register Now"}
                     </button>
 
                     {err && (
-                        <div className="bg-red-50 border border-red-100 p-3 rounded-xl">
-                            <p className="text-red-500 text-center text-xs font-bold">*{err}</p>
+                        <div className="bg-red-50 border border-red-200 p-3 rounded-2xl">
+                            <p className="text-red-500 text-center text-[11px] font-black uppercase tracking-tighter">Error: {err}</p>
                         </div>
                     )}
 
-                    <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t border-gray-100"></span>
-                        </div>
-                        <span className="relative bg-white/0 px-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-center block mx-auto w-fit">OR</span>
+                    {/* STEP 5: Divider Lines - bg-gray-300 */}
+                    <div className="relative py-4 flex items-center">
+                        <div className="flex-grow h-[2px] bg-gray-300 opacity-50 rounded-full"></div>
+                        <span className="mx-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">OR</span>
+                        <div className="flex-grow h-[2px] bg-gray-300 opacity-50 rounded-full"></div>
                     </div>
 
                     <button 
-                        className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-100 rounded-2xl px-4 py-3.5 font-bold text-gray-700 hover:bg-gray-50 transition-all active:scale-[0.98]" 
+                        className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-[1.5rem] px-4 py-4 font-bold text-gray-700 hover:bg-gray-50 transition-all active:scale-[0.98] shadow-sm" 
                         onClick={handleGoogleAuth}
                     >
-                        <FcGoogle size={22} />
-                        <span>Sign up with Google</span>
+                        <FcGoogle size={24} />
+                        <span className="text-sm">Signup with Google</span>
                     </button>
 
-                    <p className="text-center mt-8 text-gray-500 font-medium">
-                        Already have an account? 
-                        <span 
-                            className="text-[#ff4d2d] font-bold ml-2 cursor-pointer hover:underline decoration-2 underline-offset-4" 
+                    <p className="text-center mt-6 text-gray-400 text-sm font-semibold">
+                        Already joined? 
+                        <button 
+                            className="text-[#ff4d2d] font-black ml-2 hover:underline decoration-2 underline-offset-4" 
                             onClick={() => navigate("/signin")}
                         >
                             Sign In
-                        </span>
+                        </button>
                     </p>
                 </div>
             </div>
