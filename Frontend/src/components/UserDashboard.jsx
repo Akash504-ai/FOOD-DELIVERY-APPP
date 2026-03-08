@@ -239,28 +239,28 @@ function UserDashboard() {
             whileHover={{ animationPlayState: "paused" }}
           >
             {duplicatedCategories.map((cate, index) => (
-             <div key={index} className="flex-shrink-0">
-  <Tooltip
-    content={
-      <div className="flex items-center gap-3">
-        <img
-          src={cate.image}
-          className="w-10 h-10 rounded-md object-cover"
-        />
-        <span className="font-semibold">{cate.category}</span>
-      </div>
-    }
-  >
-    <div>
-      <CategoryCard
-        name={cate.category}
-        image={cate.image}
-        active={activeCategory === cate.category}
-        onClick={() => handleFilterByCategory(cate.category)}
-      />
-    </div>
-  </Tooltip>
-</div>
+              <div key={index} className="flex-shrink-0">
+                <Tooltip
+                  content={
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={cate.image}
+                        className="w-10 h-10 rounded-md object-cover"
+                      />
+                      <span className="font-semibold">{cate.category}</span>
+                    </div>
+                  }
+                >
+                  <div>
+                    <CategoryCard
+                      name={cate.category}
+                      image={cate.image}
+                      active={activeCategory === cate.category}
+                      onClick={() => handleFilterByCategory(cate.category)}
+                    />
+                  </div>
+                </Tooltip>
+              </div>
             ))}
           </motion.div>
         </div>

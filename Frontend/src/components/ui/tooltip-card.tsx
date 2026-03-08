@@ -175,10 +175,7 @@ export const Tooltip = ({
               left: position.x,
             }}
           >
-            <div
-              ref={contentRef}
-              className="p-3 text-sm text-white"
-            >
+            <div ref={contentRef} className="p-3 text-sm text-white">
               {content}
             </div>
           </motion.div>
