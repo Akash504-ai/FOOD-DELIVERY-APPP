@@ -10,6 +10,7 @@ import { Button } from "../components/ui/moving-border";
 import Footer from "./Footer";
 import { motion } from "framer-motion";
 import HomeRecommendations from "./HomeRecommendations.jsx";
+import { Tooltip } from "../components/ui/tooltip-card"; // Adjust path as needed
 
 function UserDashboard() {
   const { currentCity, shopInMyCity, itemsInMyCity, searchItems } = useSelector(
@@ -157,14 +158,26 @@ function UserDashboard() {
               delivered home.
             </p>
 
-            <button
-              onClick={() =>
-                shopScrollRef.current.scrollIntoView({ behavior: "smooth" })
+            <Tooltip
+              content={
+                <div className="flex items-center gap-2">
+                  <img
+                    src="https://images.unsplash.com/photo-1504674900247-0877df9cc836"
+                    className="w-10 h-10 rounded object-cover"
+                  />
+                  <span>Start ordering delicious food</span>
+                </div>
               }
-              className="px-10 py-5 bg-[#ff4d2d] text-white rounded-2xl font-black shadow-xl shadow-orange-200 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
             >
-              Order Now <FaArrowRight />
-            </button>
+              <button
+                onClick={() =>
+                  shopScrollRef.current?.scrollIntoView({ behavior: "smooth" })
+                }
+                className="px-10 py-5 bg-[#ff4d2d] text-white rounded-2xl font-black shadow-xl shadow-orange-200 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+              >
+                Order Now <FaArrowRight />
+              </button>
+            </Tooltip>
           </div>
 
           <div className="flex-1 relative w-full flex justify-center">

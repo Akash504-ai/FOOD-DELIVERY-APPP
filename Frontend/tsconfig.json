@@ -1,9 +1,26 @@
 {
   "compilerOptions": {
+    /* Base Options */
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
     "checkJs": false,
+    "skipLibCheck": true,
+    "strict": true,
     "noEmit": true,
 
+    /* JSX Transform - THIS FIXES THE ERRORS */
+    "jsx": "react-jsx", 
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Module Resolution */
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    /* Path Aliases */
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
