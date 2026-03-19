@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FaUtensils, FaStore, FaMapMarkerAlt, FaCity, FaMap, FaCloudUploadAlt } from "react-icons/fa";
 import axios from 'axios';
-import { serverUrl } from '../App';
+import { serverUrl } from '../App.jsx';
 import { setMyShopData } from '../redux/ownerSlice';
 import { ClipLoader } from 'react-spinners';
 

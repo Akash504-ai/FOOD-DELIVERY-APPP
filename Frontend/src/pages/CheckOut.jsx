@@ -15,7 +15,7 @@ import { FaCreditCard, FaArrowRight } from "react-icons/fa";
 import axios from "axios";
 import { FaMobileScreenButton } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { serverUrl } from "../App";
+import { serverUrl } from "../App.jsx";
 import { addMyOrder } from "../redux/userSlice";
 
 function RecenterMap({ location }) {
