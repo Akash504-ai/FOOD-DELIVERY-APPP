@@ -3,18 +3,18 @@ import Order from "../models/order.model.js";
 import Shop from "../models/shop.model.js";
 import User from "../models/user.model.js";
 import { sendDeliveryOtpMail } from "../utils/mail.js";
-import RazorPay from "razorpay";
+// import RazorPay from "razorpay";
 import dotenv from "dotenv";
 import { count } from "console";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-dotenv.config();
-let instance = new RazorPay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+// dotenv.config();
+// let instance = new RazorPay({
+//   key_id: process.env.RAZORPAY_KEY_ID,
+//   key_secret: process.env.RAZORPAY_KEY_SECRET,
+// });
 
 export const placeOrder = async (req, res) => {
   try {
