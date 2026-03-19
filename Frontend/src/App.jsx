@@ -26,7 +26,7 @@ import useGetItemsByCity from "./hooks/useGetItemsByCity";
 import useGetMyOrders from "./hooks/useGetMyOrders";
 import useUpdateLocation from "./hooks/useUpdateLocation";
 
-export const serverUrl = "http://localhost:5000";
+export const serverUrl = "https://food-delivery-appp-1.onrender.com";
 
 const ProtectedRoute = ({ children }) => {
   const { userData, loading } = useSelector((state) => state.user);
