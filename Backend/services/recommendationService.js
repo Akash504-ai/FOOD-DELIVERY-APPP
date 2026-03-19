@@ -1,10 +1,9 @@
-import axios from "axios";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getRecommendations = async (itemId) => {
   try {
-
     const response = await axios.get(
-      `http://127.0.0.1:8000/recommend/${itemId}`
+      `${BASE_URL}/recommend/${itemId}`
     );
 
     return response.data.recommendations;
