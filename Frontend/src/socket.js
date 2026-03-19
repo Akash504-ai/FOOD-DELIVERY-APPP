@@ -1,7 +1,6 @@
-// socket.js
 import { io } from "socket.io-client";
 
-export const serverUrl = "http://localhost:5000";
+export const serverUrl = "https://food-delivery-appp-1.onrender.com";
 
 export const socket = io(serverUrl, {
   withCredentials: true,
