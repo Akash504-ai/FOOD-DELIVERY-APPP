@@ -30,7 +30,7 @@ export const signUp = async (req, res) => {
       password: hashedPassword,
     });
 
-    const token = await genToken(user._id);
+    const token = genToken(user._id);
 
     return res.status(201).json({
       user,
@@ -55,7 +55,7 @@ export const signIn = async (req, res) => {
       return res.status(400).json({ message: "incorrect Password" });
     }
 
-    const token = await genToken(user._id);
+    const token = genToken(user._id);
 
     return res.status(200).json({
       user,
@@ -158,7 +158,7 @@ export const googleAuth = async (req, res) => {
       });
     }
 
-    const token = await genToken(user._id);
+    const token = genToken(user._id);
 
     return res.status(200).json({
       user,
