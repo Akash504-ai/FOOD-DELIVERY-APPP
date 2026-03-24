@@ -6,14 +6,26 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  // const token = JSON.parse(localStorage.getItem("token"));
   const token = localStorage.getItem("token");
 
   if (token) {
+    config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
   }
 
   return config;
 });
+
+// Handle unauthorized globally
+api.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login"; // ok for now
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;

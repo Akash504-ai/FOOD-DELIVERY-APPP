@@ -11,7 +11,7 @@ import {
   FaCloudUploadAlt,
 } from "react-icons/fa";
 import api from "../utils/axios";
-import { BASE_URL } from "../utils/api";
+// import { BASE_URL } from "../utils/api";
 import { setMyShopData } from "../redux/ownerSlice";
 import { ClipLoader } from "react-spinners";
 
@@ -39,6 +39,12 @@ function CreateEditShop() {
     if (currentAddress) setAddress(currentAddress);
   }, [currentCity, currentState, currentAddress]);
 
+  useEffect(() => {
+    if (myShopData?.image) {
+      setFrontendImage(myShopData.image);
+    }
+  }, [myShopData]);
+
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -65,7 +71,7 @@ function CreateEditShop() {
         formData.append("image", backendImage);
       }
       const result = await api.post(
-        `${BASE_URL}/api/shop/create-edit`,
+        "/api/shop/create-edit",
         formData,
         {
           withCredentials: true,

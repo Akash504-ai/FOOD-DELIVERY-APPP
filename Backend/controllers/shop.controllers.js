@@ -85,17 +85,31 @@ export const createEditShop = async (req, res) => {
     console.log("FILE:", req.file);
     console.log("USER:", req.userId);
 
-    let image;
-
-    // 🚨 TEMP: SKIP CLOUDINARY COMPLETELY
-    if (req.file) {
-      console.log("FILE PATH:", req.file.path);
-      image = "test-image-url"; // 🔥 FORCE SUCCESS
+    // ✅ validation
+    if (!name || !city || !state || !address) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
 
+    let image;
+
+    // ✅ CLOUDINARY UPLOAD
+    if (req.file && req.file.path) {
+      try {
+        const uploaded = await uploadOnCloudinary(req.file.path);
+        image = uploaded; // 🔥 full URL
+        console.log("CLOUDINARY URL:", image);
+      } catch (err) {
+        console.error("CLOUDINARY ERROR:", err);
+      }
+    }
+
+    // ✅ find existing shop
     let shop = await Shop.findOne({ owner: req.userId });
 
     if (!shop) {
+      // ✅ CREATE
       shop = await Shop.create({
         name,
         city,
@@ -105,25 +119,33 @@ export const createEditShop = async (req, res) => {
         owner: req.userId,
       });
     } else {
-      shop = await Shop.findByIdAndUpdate(
-        shop._id,
-        { name, city, state, address, image },
-        { new: true }
-      );
+      // ✅ UPDATE (SAFE)
+      const updateData = {
+        name,
+        city,
+        state,
+        address,
+      };
+
+      if (image) {
+        updateData.image = image; // only update if new image
+      }
+
+      shop = await Shop.findByIdAndUpdate(shop._id, updateData, {
+        new: true,
+      });
     }
 
     return res.status(200).json(shop);
-
   } catch (error) {
     console.error("🔥 FINAL ERROR:", error);
 
     return res.status(500).json({
-      message: "ERROR",
+      message: "Something went wrong",
       error: error.message,
     });
   }
 };
-
 /* ================= GET MY SHOP ================= */
 export const getMyShop = async (req, res) => {
   try {

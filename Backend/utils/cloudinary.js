@@ -7,21 +7,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadOnCloudinary = async (filePath) => {
+const uploadOnCloudinary = async (localFilePath) => {
   try {
-    const result = await cloudinary.uploader.upload(filePath);
+    if (!localFilePath) return null;
 
-    fs.unlinkSync(filePath);
+    const response = await cloudinary.uploader.upload(localFilePath, {
+      folder: "shops", // optional but good practice
+    });
 
-    return result.secure_url;
+    // delete local file after upload
+    fs.unlinkSync(localFilePath);
+
+    return response.secure_url; // ✅ IMPORTANT
   } catch (error) {
-    console.log("CLOUDINARY ERROR:", error);
-
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-
-    throw error; // 🔥 THIS WAS IMPORTANT
+    console.error("CLOUDINARY ERROR:", error);
+    return null;
   }
 };
 

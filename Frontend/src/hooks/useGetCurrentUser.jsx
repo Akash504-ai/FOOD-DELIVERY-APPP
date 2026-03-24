@@ -1,7 +1,6 @@
 import api from "../utils/axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { BASE_URL } from "../utils/api";
 import { setUserData, setLoading } from "../redux/userSlice";
 
 function useGetCurrentUser() {
@@ -10,18 +9,20 @@ function useGetCurrentUser() {
   useEffect(() => {
     const fetchUser = async () => {
       dispatch(setLoading(true));
+
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        dispatch(setUserData(null));
+        dispatch(setLoading(false));
+        return;
+      }
+
       try {
-        const res = await api.get(
-          `${BASE_URL}/api/user/current`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`
-            }
-          }
-        );
+        const res = await api.get("/api/user/current")
         dispatch(setUserData(res.data));
       } catch (error) {
-        dispatch(setUserData(null));
+        console.log("ERROR:", error?.response?.data);
       } finally {
         dispatch(setLoading(false));
       }

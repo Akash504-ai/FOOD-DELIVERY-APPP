@@ -15,6 +15,7 @@ import shopRouter from "./routes/shop.routes.js";
 import orderRouter from "./routes/order.routes.js";
 import recommendationRoutes from "./routes/recommendationRoutes.js";
 import { socketHandler } from "./socket.js";
+import path from "path";
 
 const app = express();
 const server = http.createServer(app);
@@ -60,6 +61,7 @@ app.set("io", io);
 
 app.use(express.json());
 app.use(cookieParser());
+app.use("/public", express.static(path.join(process.cwd(), "public")));
 
 /* ================= ROUTES ================= */
 

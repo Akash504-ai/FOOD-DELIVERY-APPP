@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { getRecommendations } from "../services/recommendationService";
 import FoodCard from "./FoodCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { HiSparkles } from "react-icons/hi2";
 import { FaFire } from "react-icons/fa6";
 
 function HomeRecommendations({ itemId }) {
@@ -18,9 +17,10 @@ function HomeRecommendations({ itemId }) {
       setIsLoading(true);
       try {
         const data = await getRecommendations(itemId);
-        setItems(data);
+        setItems(data || []);
       } catch (error) {
         console.error("Failed to load recommendations", error);
+        setItems([]);
       } finally {
         setIsLoading(false);
       }
@@ -41,33 +41,49 @@ function HomeRecommendations({ itemId }) {
     scrollRef.current.scrollBy({ left: offset, behavior: "smooth" });
   };
 
-  if (!isLoading && items.length === 0) return null;
+  // ✅ EMPTY STATE (for new users)
+  if (!isLoading && items.length === 0) {
+    return (
+      <section className="max-w-7xl mx-auto px-4 md:px-8 py-12 text-center">
+        <p className="text-gray-400 text-lg font-medium">
+          Start ordering to get recommendations 🍽️
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-      {/* Header Section */}
+      {/* Header */}
       <div className="flex justify-between items-end mb-8">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-orange-100 rounded-lg">
               <FaFire className="text-orange-600" />
             </div>
+            {/* ✅ FIXED TITLE */}
             <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900">
-              Recommended for you
+              You may also like
             </h2>
           </div>
+
+          {/* ✅ FIXED SUBTEXT */}
           <p className="text-gray-500 text-sm md:text-base">
-            Based on your recent favorites
+            Similar items based on your activity
           </p>
         </div>
 
-        {/* Navigation Controls */}
+        {/* Navigation Buttons */}
         <div className="hidden md:flex gap-3">
           <button
             onClick={() => scroll("left")}
             disabled={!canScrollLeft}
             className={`p-3 rounded-full bg-white border border-gray-100 shadow-sm transition-all duration-200 
-              ${!canScrollLeft ? "opacity-30 cursor-not-allowed" : "hover:bg-gray-50 hover:shadow-md active:scale-90"}`}
+              ${
+                !canScrollLeft
+                  ? "opacity-30 cursor-not-allowed"
+                  : "hover:bg-gray-50 hover:shadow-md active:scale-90"
+              }`}
           >
             <FaChevronLeft className="text-gray-700" size={18} />
           </button>
@@ -76,14 +92,18 @@ function HomeRecommendations({ itemId }) {
             onClick={() => scroll("right")}
             disabled={!canScrollRight}
             className={`p-3 rounded-full bg-white border border-gray-100 shadow-sm transition-all duration-200 
-              ${!canScrollRight ? "opacity-30 cursor-not-allowed" : "hover:bg-gray-50 hover:shadow-md active:scale-90"}`}
+              ${
+                !canScrollRight
+                  ? "opacity-30 cursor-not-allowed"
+                  : "hover:bg-gray-50 hover:shadow-md active:scale-90"
+              }`}
           >
             <FaChevronRight className="text-gray-700" size={18} />
           </button>
         </div>
       </div>
 
-      {/* Slider Container */}
+      {/* Slider */}
       <div
         ref={scrollRef}
         onScroll={checkScrollLimits}
@@ -91,7 +111,7 @@ function HomeRecommendations({ itemId }) {
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {isLoading
-          ? // Skeleton Loading State
+          ? // Skeleton loader
             [...Array(5)].map((_, i) => (
               <div
                 key={i}
@@ -106,7 +126,7 @@ function HomeRecommendations({ itemId }) {
                 <FoodCard data={item} />
               </div>
             ))}
-        {/* Invisible spacer for perfect end-of-list padding */}
+
         <div className="min-w-[20px] flex-shrink-0" />
       </div>
     </section>
