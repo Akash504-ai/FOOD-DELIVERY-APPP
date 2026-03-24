@@ -30,7 +30,8 @@ export const signUp = async (req, res) => {
     });
 
     const token = await genToken(user._id);
-    const isProd = process.env.NODE_ENV === "production";
+    // const isProd = process.env.NODE_ENV === "production";
+    const isProd = true; // FORCE for now
 
     res.cookie("token", token, {
       httpOnly: true,
