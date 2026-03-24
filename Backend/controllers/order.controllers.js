@@ -8,7 +8,11 @@ import dotenv from "dotenv";
 import { count } from "console";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+let stripe = null;
+
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+}
 
 // dotenv.config();
 // let instance = new RazorPay({
@@ -65,7 +69,7 @@ export const placeOrder = async (req, res) => {
     });
 
     // 🔥 IF STRIPE SELECTED
-    if (paymentMethod === "stripe") {
+    if (paymentMethod === "stripe" && stripe) {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",

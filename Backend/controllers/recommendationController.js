@@ -1,18 +1,23 @@
 import axios from "axios";
 import Item from "../models/item.model.js";
 
+const ML_API = process.env.ML_API_URL;
+
 export const recommendItems = async (req, res) => {
   try {
-
     const { itemId } = req.params;
 
+    // ✅ Call deployed ML service (NOT localhost)
     const response = await axios.get(
-      `http://127.0.0.1:8000/recommend/${itemId}`
+      `${ML_API}/recommend/${itemId}`
     );
 
     const ids = response.data.recommendations;
 
-    const items = await Item.find({ _id: { $in: ids } });
+    // ✅ Fetch full item data
+    const items = await Item.find({
+      _id: { $in: ids }
+    });
 
     res.json({
       success: true,
@@ -20,7 +25,8 @@ export const recommendItems = async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
+    console.error("Recommendation error:", error.message);
+
     res.status(500).json({
       success: false,
       message: "Recommendation error"

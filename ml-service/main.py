@@ -50,3 +50,5 @@ def recommend(item_id: str):
 
     except Exception as e:
         return {"error": str(e)}
+    
+# uvicorn main:app --reload

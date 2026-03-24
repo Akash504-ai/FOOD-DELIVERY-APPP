@@ -1,15 +1,15 @@
-const BASE_URL = import.meta.env.VITE_API_URL;
+const axios = require("axios");
 
-export const getRecommendations = async (itemId) => {
+const ML_API = process.env.ML_API_URL;
+
+const getRecommendationsFromML = async (itemId) => {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/recommend/${itemId}`
-    );
-
-    return response.data.recommendations;
-
-  } catch (error) {
-    console.error("Recommendation service error:", error.message);
+    const res = await axios.get(`${ML_API}/recommend/${itemId}`);
+    return res.data.recommendations;
+  } catch (err) {
+    console.error("ML API error:", err.message);
     return [];
   }
 };
+
+module.exports = { getRecommendationsFromML };
