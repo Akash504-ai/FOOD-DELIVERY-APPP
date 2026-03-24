@@ -24,18 +24,28 @@ function useGetCity() {
 
           dispatch(setLocation({ lat: latitude, lon: longitude }));
 
-          const result = await axios.get(
-            `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${apiKey}`
+          const { data } = await axios.get(
+            `https://api.geoapify.com/v1/geocode/reverse`,
+            {
+              params: {
+                lat: latitude,
+                lon: longitude,
+                format: "json",
+                apiKey: apiKey,
+              },
+            }
           );
 
-          const data = result?.data?.results?.[0];
+          const result = data?.results?.[0];
 
-          dispatch(setCurrentCity(data?.city || data?.county));
-          dispatch(setCurrentState(data?.state));
+          dispatch(setCurrentCity(result?.city || result?.county));
+          dispatch(setCurrentState(result?.state));
           dispatch(
-            setCurrentAddress(data?.address_line2 || data?.address_line1)
+            setCurrentAddress(
+              result?.address_line2 || result?.address_line1
+            )
           );
-          dispatch(setAddress(data?.address_line2));
+          dispatch(setAddress(result?.address_line2));
         } catch (err) {
           console.log("Geo API error:", err);
         }
@@ -44,7 +54,7 @@ function useGetCity() {
         console.log("Location permission denied:", error.message);
       }
     );
-  }, [userData]);
+  }, [dispatch, userData, apiKey]);
 }
 
 export default useGetCity;

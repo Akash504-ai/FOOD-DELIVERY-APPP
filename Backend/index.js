@@ -21,24 +21,34 @@ const server = http.createServer(app);
 
 const PORT = process.env.PORT || 5000;
 
-/* ================= CORS (FINAL FIX) ================= */
+/* ================= CORS (FIXED FOR VERCEL) ================= */
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://food-delivery-appp-seven.vercel.app",
+  "https://food-delivery-appp-kt36-git-main-akash-santra-s-projects.vercel.app"
+];
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://food-delivery-appp-seven.vercel.app"
-  ],
-  credentials: true
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 /* ================= SOCKET.IO ================= */
 
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:5173",
-      "https://food-delivery-appp-seven.vercel.app"
-    ],
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST"],
   },
@@ -48,8 +58,8 @@ app.set("io", io);
 
 /* ================= MIDDLEWARE ================= */
 
-app.use(cookieParser());   // 🔥 FIRST
 app.use(express.json());
+app.use(cookieParser());
 
 /* ================= ROUTES ================= */
 
