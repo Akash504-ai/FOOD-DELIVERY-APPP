@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-export const serverUrl = "https://food-delivery-appp-1.onrender.com";
+export const serverUrl = import.meta.env.VITE_API_URL;
 
 export const socket = io(serverUrl, {
   withCredentials: true,

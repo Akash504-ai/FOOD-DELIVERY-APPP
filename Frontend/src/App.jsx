@@ -26,8 +26,7 @@ import useGetItemsByCity from "./hooks/useGetItemsByCity";
 import useGetMyOrders from "./hooks/useGetMyOrders";
 import useUpdateLocation from "./hooks/useUpdateLocation";
 
-export const serverUrl = "https://food-delivery-appp-1.onrender.com";
-
+export const serverUrl = import.meta.env.VITE_API_URL;
 const ProtectedRoute = ({ children }) => {
   const { userData, loading } = useSelector((state) => state.user);
 
@@ -51,13 +50,16 @@ function App() {
   useEffect(() => {
     if (!userData) return;
 
-    const socket = io(serverUrl, { withCredentials: true });
+    const socket = io(serverUrl, {
+      withCredentials: true,
+      transports: ["websocket"], // optional but better for Render
+    });
     socket.emit("identity", { userId: userData._id });
 
     return () => socket.disconnect();
   }, [userData?._id]);
 
-  if (loading) return null; 
+  if (loading) return null;
 
   return (
     <Routes>
