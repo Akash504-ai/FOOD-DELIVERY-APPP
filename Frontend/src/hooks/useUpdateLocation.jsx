@@ -1,17 +1,20 @@
 import axios from "axios";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { BASE_URL } from "../utils/api";
 
 function useUpdateLocation() {
-  const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.user);
 
   useEffect(() => {
+    // ✅ only run if user exists
     if (!userData) return;
 
     const updateLocation = async (lat, lon) => {
       try {
+        // ✅ validate before sending
+        if (!lat || !lon) return;
+
         await axios.post(
           `${BASE_URL}/api/user/update-location`,
           { lat, lon },
@@ -22,9 +25,21 @@ function useUpdateLocation() {
       }
     };
 
+    // ✅ check browser support
+    if (!navigator.geolocation) {
+      console.log("Geolocation not supported");
+      return;
+    }
+
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
-        updateLocation(pos.coords.latitude, pos.coords.longitude);
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+
+        // ✅ prevent invalid values (MAIN FIX)
+        if (!lat || !lon) return;
+
+        updateLocation(lat, lon);
       },
       (err) => {
         console.log("Location error:", err.message);
@@ -35,8 +50,10 @@ function useUpdateLocation() {
       }
     );
 
-    // 🔥 CLEANUP (VERY IMPORTANT)
-    return () => navigator.geolocation.clearWatch(watchId);
+    // ✅ cleanup (VERY IMPORTANT)
+    return () => {
+      if (watchId) navigator.geolocation.clearWatch(watchId);
+    };
   }, [userData]);
 }
 
