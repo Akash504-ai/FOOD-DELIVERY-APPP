@@ -88,8 +88,8 @@ export const placeOrder = async (req, res) => {
         metadata: {
           orderId: newOrder._id.toString(),
         },
-        success_url: `http://localhost:5173/payment-success?orderId=${newOrder._id}`,
-        cancel_url: `http://localhost:5173/payment-failed`,
+        success_url: `${process.env.FRONTEND_URL}/payment-success?orderId=${newOrder._id}`,
+        cancel_url: `${process.env.FRONTEND_URL}/payment-failed`,
       });
 
       return res.status(200).json({

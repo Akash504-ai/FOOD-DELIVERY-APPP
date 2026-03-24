@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { serverUrl } from "../App";
+import { BASE_URL } from '../utils/api';
 import { useNavigate, useParams } from "react-router-dom";
 import {
   FaStore,
@@ -25,7 +25,7 @@ function Shop() {
     try {
       setLoading(true);
       const result = await axios.get(
-        `${serverUrl}/api/item/get-by-shop/${shopId}`,
+        `${BASE_URL}/api/item/get-by-shop/${shopId}`,
         { withCredentials: true },
       );
 

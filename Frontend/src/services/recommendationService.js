@@ -1,9 +1,17 @@
 import axios from "axios";
 
-export const getRecommendations = async (itemId) => {
-  const res = await axios.get(
-    `https://food-delivery-appp-1.onrender.com/api/recommend/${itemId}`
-  );
+const BASE_URL = import.meta.env.VITE_API_URL;
 
-  return res.data.recommendations;
+export const getRecommendations = async (itemId) => {
+  try {
+    const res = await axios.get(
+      `${BASE_URL}/api/recommend/${itemId}`
+    );
+
+    return res.data.recommendations;
+
+  } catch (error) {
+    console.error("Recommendation error:", error.message);
+    return [];
+  }
 };

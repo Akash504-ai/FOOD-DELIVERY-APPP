@@ -2,7 +2,7 @@ import React from "react";
 import Nav from "./Nav";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { serverUrl } from "../App";
+import { BASE_URL } from "../utils/api";
 import { useEffect } from "react";
 import { useState } from "react";
 import DeliveryBoyTracking from "./DeliveryBoyTracking";
@@ -66,7 +66,7 @@ function DeliveryBoy() {
 
   const getAssignments = async () => {
     try {
-      const result = await axios.get(`${serverUrl}/api/order/get-assignments`, {
+      const result = await axios.get(`${BASE_URL}/api/order/get-assignments`, {
         withCredentials: true,
       });
 
@@ -79,7 +79,7 @@ function DeliveryBoy() {
   const getCurrentOrder = async () => {
     try {
       const result = await axios.get(
-        `${serverUrl}/api/order/get-current-order`,
+        `${BASE_URL}/api/order/get-current-order`,
         { withCredentials: true },
       );
       setCurrentOrder(result.data);
@@ -91,7 +91,7 @@ function DeliveryBoy() {
   const acceptOrder = async (assignmentId) => {
   try {
     await axios.get(
-      `${serverUrl}/api/order/accept-order/${assignmentId}`,
+      `${BASE_URL}/api/order/accept-order/${assignmentId}`,
       { withCredentials: true }
     );
 
@@ -130,7 +130,7 @@ function DeliveryBoy() {
     setLoading(true);
     try {
       const result = await axios.post(
-        `${serverUrl}/api/order/send-delivery-otp`,
+        `${BASE_URL}/api/order/send-delivery-otp`,
         {
           orderId: currentOrder._id,
           shopOrderId: currentOrder.shopOrder._id,
@@ -149,7 +149,7 @@ function DeliveryBoy() {
     setMessage("");
     try {
       const result = await axios.post(
-        `${serverUrl}/api/order/verify-delivery-otp`,
+        `${BASE_URL}/api/order/verify-delivery-otp`,
         {
           orderId: currentOrder._id,
           shopOrderId: currentOrder.shopOrder._id,
@@ -168,7 +168,7 @@ function DeliveryBoy() {
   const handleTodayDeliveries = async () => {
     try {
       const result = await axios.get(
-        `${serverUrl}/api/order/get-today-deliveries`,
+        `${BASE_URL}/api/order/get-today-deliveries`,
         { withCredentials: true },
       );
       console.log(result.data);

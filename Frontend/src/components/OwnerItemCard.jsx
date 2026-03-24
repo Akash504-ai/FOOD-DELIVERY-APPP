@@ -3,7 +3,7 @@ import React from 'react';
 import { FaPen, FaTrashAlt, FaLeaf } from "react-icons/fa";
 import { MdOutlineFastfood, MdCategory } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import { serverUrl } from '../App';
+import { BASE_URL } from "../utils/api";
 import { useDispatch } from 'react-redux';
 import { setMyShopData } from '../redux/ownerSlice';
 
@@ -14,7 +14,7 @@ function OwnerItemCard({ data }) {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
-        const result = await axios.get(`${serverUrl}/api/item/delete/${data._id}`, { withCredentials: true });
+        const result = await axios.get(`${BASE_URL}/api/item/delete/${data._id}`, { withCredentials: true });
         dispatch(setMyShopData(result.data));
       } catch (error) {
         console.error(error);

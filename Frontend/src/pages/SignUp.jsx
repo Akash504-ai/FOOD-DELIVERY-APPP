@@ -3,7 +3,7 @@ import { FaRegEye, FaRegEyeSlash, FaUser, FaEnvelope, FaPhoneAlt, FaLock } from 
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios"
-import { serverUrl } from '../App';
+import { BASE_URL } from '../utils/api';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { ClipLoader } from "react-spinners"
@@ -26,7 +26,7 @@ function SignUp() {
     const handleSignUp = async () => {
         setLoading(true)
         try {
-            const result = await axios.post(`${serverUrl}/api/auth/signup`, {
+            const result = await axios.post(`${BASE_URL}/api/auth/signup`, {
                 fullName, email, password, mobile, role
             }, { withCredentials: true })
             dispatch(setUserData(result.data))
@@ -45,7 +45,7 @@ function SignUp() {
         const provider = new GoogleAuthProvider()
         try {
             const result = await signInWithPopup(auth, provider)
-            const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
+            const { data } = await axios.post(`${BASE_URL}/api/auth/google-auth`, {
                 fullName: result.user.displayName,
                 email: result.user.email,
                 role,

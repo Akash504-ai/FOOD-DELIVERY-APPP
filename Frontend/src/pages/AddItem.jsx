@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FaUtensils, FaCloudUploadAlt, FaLeaf, FaDrumstickBite } from "react-icons/fa";
 import axios from 'axios';
-import { serverUrl } from '../App.jsx';
+import { BASE_URL } from '../utils/api.js';
 import { setMyShopData } from '../redux/ownerSlice';
 import { ClipLoader } from 'react-spinners';
 
@@ -47,7 +47,7 @@ function AddItem() {
             if (backendImage) {
                 formData.append("image", backendImage);
             }
-            const result = await axios.post(`${serverUrl}/api/item/add-item`, formData, { withCredentials: true });
+            const result = await axios.post(`${BASE_URL}/api/item/add-item`, formData, { withCredentials: true });
             dispatch(setMyShopData(result.data));
             setLoading(false);
             navigate("/");

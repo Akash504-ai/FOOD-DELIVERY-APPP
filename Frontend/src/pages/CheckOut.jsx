@@ -15,7 +15,7 @@ import { FaCreditCard, FaArrowRight } from "react-icons/fa";
 import axios from "axios";
 import { FaMobileScreenButton } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { serverUrl } from "../App.jsx";
+import { BASE_URL } from '../utils/api';
 import { addMyOrder } from "../redux/userSlice";
 
 function RecenterMap({ location }) {
@@ -79,7 +79,7 @@ function CheckOut() {
   const handlePlaceOrder = async () => {
     try {
       const result = await axios.post(
-        `${serverUrl}/api/order/place-order`,
+        `${BASE_URL}/api/order/place-order`,
         {
           paymentMethod,
           deliveryAddress: {
@@ -119,7 +119,7 @@ function CheckOut() {
       handler: async function (response) {
         try {
           const result = await axios.post(
-            `${serverUrl}/api/order/verify-payment`,
+            `${BASE_URL}/api/order/verify-payment`,
             {
               razorpay_payment_id: response.razorpay_payment_id,
               orderId,

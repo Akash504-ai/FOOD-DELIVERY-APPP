@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { serverUrl } from "../App";
+import { BASE_URL } from '../utils/api';
 import { IoIosArrowRoundBack } from "react-icons/io";
 import {
   FiPackage,
@@ -26,7 +26,7 @@ function TrackOrderPage() {
   const handleGetOrder = async () => {
     try {
       const res = await axios.get(
-        `${serverUrl}/api/order/get-order-by-id/${orderId}`,
+        `${BASE_URL}/api/order/get-order-by-id/${orderId}`,
         { withCredentials: true }
       );
       setCurrentOrder(res.data);

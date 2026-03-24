@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { MdPhone, MdEmail, MdLocationOn, MdCreditCard, MdOutlineFastfood } from "react-icons/md";
-import { serverUrl } from '../App';
+import { BASE_URL } from "../utils/api";
 import { useDispatch } from 'react-redux';
 import { updateOrderStatus } from '../redux/userSlice';
 
@@ -11,7 +11,7 @@ function OwnerOrderCard({ data }) {
 
     const handleUpdateStatus = async (orderId, shopId, status) => {
         try {
-            const result = await axios.post(`${serverUrl}/api/order/update-status/${orderId}/${shopId}`, { status }, { withCredentials: true });
+            const result = await axios.post(`${BASE_URL}/api/order/update-status/${orderId}/${shopId}`, { status }, { withCredentials: true });
             dispatch(updateOrderStatus({ orderId, shopId, status }));
             setAvailableBoys(result.data.availableBoys);
         } catch (error) {

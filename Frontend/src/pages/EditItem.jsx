@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaUtensils, FaCloudUploadAlt, FaLeaf, FaDrumstickBite } from "react-icons/fa";
 import axios from 'axios';
-import { serverUrl } from '../App.jsx';
+import { BASE_URL } from '../utils/api';
 import { setMyShopData } from '../redux/ownerSlice';
 import { ClipLoader } from 'react-spinners';
 
@@ -49,7 +49,7 @@ function EditItem() {
             if (backendImage) {
                 formData.append("image", backendImage);
             }
-            const result = await axios.post(`${serverUrl}/api/item/edit-item/${itemId}`, formData, { withCredentials: true });
+            const result = await axios.post(`${BASE_URL}/api/item/edit-item/${itemId}`, formData, { withCredentials: true });
             dispatch(setMyShopData(result.data));
             setLoading(false);
             navigate("/");
@@ -62,7 +62,7 @@ function EditItem() {
     useEffect(() => {
         const handleGetItemById = async () => {
             try {
-                const result = await axios.get(`${serverUrl}/api/item/get-by-id/${itemId}`, { withCredentials: true });
+                const result = await axios.get(`${BASE_URL}/api/item/get-by-id/${itemId}`, { withCredentials: true });
                 setCurrentItem(result.data);
             } catch (error) {
                 console.log(error);

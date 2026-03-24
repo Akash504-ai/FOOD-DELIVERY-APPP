@@ -5,7 +5,7 @@ import { FiShoppingCart, FiLogOut, FiShoppingBag } from "react-icons/fi";
 import { useDispatch, useSelector } from 'react-redux';
 import { RxCross2 } from "react-icons/rx";
 import axios from 'axios';
-import { serverUrl } from '../App';
+import { BASE_URL } from "../utils/api";
 import { setSearchItems, setUserData } from '../redux/userSlice';
 import { TbReceipt2 } from "react-icons/tb";
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,7 @@ function Nav() {
 
     const handleLogOut = async () => {
         try {
-            await axios.get(`${serverUrl}/api/auth/signout`, { withCredentials: true });
+            await axios.get(`${BASE_URL}/api/auth/signout`, { withCredentials: true });
             dispatch(setUserData(null));
         } catch (error) {
             console.log(error);
@@ -47,7 +47,7 @@ function Nav() {
 
     const handleSearchItems = async () => {
         try {
-            const result = await axios.get(`${serverUrl}/api/item/search-items?query=${query}&city=${currentCity}`, { withCredentials: true });
+            const result = await axios.get(`${BASE_URL}/api/item/search-items?query=${query}&city=${currentCity}`, { withCredentials: true });
             dispatch(setSearchItems(result.data));
         } catch (error) {
             console.log(error);
