@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from "../utils/axios";
 import React, { useState } from 'react';
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiMail, FiLock, FiShield } from "react-icons/fi";
@@ -19,7 +19,7 @@ function ForgotPassword() {
   const handleSendOtp = async () => {
     setLoading(true);
     try {
-      await axios.post(`${BASE_URL}/api/auth/send-otp`, { email }, { withCredentials: true });
+      await api.post(`${BASE_URL}/api/auth/send-otp`, { email }, { withCredentials: true });
       setErr("");
       setStep(2);
       setLoading(false);
@@ -32,7 +32,7 @@ function ForgotPassword() {
   const handleVerifyOtp = async () => {
     setLoading(true);
     try {
-      await axios.post(`${BASE_URL}/api/auth/verify-otp`, { email, otp }, { withCredentials: true });
+      await api.post(`${BASE_URL}/api/auth/verify-otp`, { email, otp }, { withCredentials: true });
       setErr("");
       setStep(3);
       setLoading(false);
@@ -49,7 +49,7 @@ function ForgotPassword() {
     }
     setLoading(true);
     try {
-      await axios.post(`${BASE_URL}/api/auth/reset-password`, { email, newPassword }, { withCredentials: true });
+      await api.post(`${BASE_URL}/api/auth/reset-password`, { email, newPassword }, { withCredentials: true });
       setErr("");
       setLoading(false);
       navigate("/signin");

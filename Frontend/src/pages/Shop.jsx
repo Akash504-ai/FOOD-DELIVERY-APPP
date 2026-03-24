@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from '../utils/api';
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,7 +24,7 @@ function Shop() {
   const handleShop = async () => {
     try {
       setLoading(true);
-      const result = await axios.get(
+      const result = await api.get(
         `${BASE_URL}/api/item/get-by-shop/${shopId}`,
         { withCredentials: true },
       );

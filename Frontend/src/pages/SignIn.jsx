@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaRegEye, FaRegEyeSlash, FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/axios";
 import { BASE_URL } from "../utils/api";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -23,7 +23,7 @@ function SignIn() {
   const handleSignIn = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.post(`${BASE_URL}/api/auth/signin`, {
+      const { data } = await api.post(`${BASE_URL}/api/auth/signin`, {
         email,
         password,
       });

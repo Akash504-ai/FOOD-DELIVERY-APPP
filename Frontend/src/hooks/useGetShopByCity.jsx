@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/api";
@@ -13,7 +13,7 @@ function useGetShopByCity() {
 
     const fetchShops = async () => {
       try {
-        const result = await axios.get(
+        const result = await api.get(
           `${BASE_URL}/api/shop/get-by-city/${currentCity}`,
           { withCredentials: true }
         );

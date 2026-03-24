@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BASE_URL } from "../utils/api";
@@ -11,7 +11,7 @@ function useGetCurrentUser() {
     const fetchUser = async () => {
       dispatch(setLoading(true));
       try {
-        const res = await axios.get(
+        const res = await api.get(
           `${BASE_URL}/api/user/current`,
           {
             headers: {

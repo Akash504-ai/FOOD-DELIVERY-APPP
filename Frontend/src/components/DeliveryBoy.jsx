@@ -1,7 +1,7 @@
 import React from "react";
 import Nav from "./Nav";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import api from "../utils/axios";
 import { BASE_URL } from "../utils/api";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -66,7 +66,7 @@ function DeliveryBoy() {
 
   const getAssignments = async () => {
     try {
-      const result = await axios.get(`${BASE_URL}/api/order/get-assignments`, {
+      const result = await api.get(`${BASE_URL}/api/order/get-assignments`, {
         withCredentials: true,
       });
 
@@ -78,7 +78,7 @@ function DeliveryBoy() {
 
   const getCurrentOrder = async () => {
     try {
-      const result = await axios.get(
+      const result = await api.get(
         `${BASE_URL}/api/order/get-current-order`,
         { withCredentials: true },
       );
@@ -90,7 +90,7 @@ function DeliveryBoy() {
 
   const acceptOrder = async (assignmentId) => {
   try {
-    await axios.get(
+    await api.get(
       `${BASE_URL}/api/order/accept-order/${assignmentId}`,
       { withCredentials: true }
     );
@@ -129,7 +129,7 @@ function DeliveryBoy() {
   const sendOtp = async () => {
     setLoading(true);
     try {
-      const result = await axios.post(
+      const result = await api.post(
         `${BASE_URL}/api/order/send-delivery-otp`,
         {
           orderId: currentOrder._id,
@@ -148,7 +148,7 @@ function DeliveryBoy() {
   const verifyOtp = async () => {
     setMessage("");
     try {
-      const result = await axios.post(
+      const result = await api.post(
         `${BASE_URL}/api/order/verify-delivery-otp`,
         {
           orderId: currentOrder._id,
@@ -167,7 +167,7 @@ function DeliveryBoy() {
 
   const handleTodayDeliveries = async () => {
     try {
-      const result = await axios.get(
+      const result = await api.get(
         `${BASE_URL}/api/order/get-today-deliveries`,
         { withCredentials: true },
       );

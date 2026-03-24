@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from "../utils/axios";
 import React from 'react';
 import { FaPen, FaTrashAlt, FaLeaf } from "react-icons/fa";
 import { MdOutlineFastfood, MdCategory } from "react-icons/md";
@@ -14,7 +14,7 @@ function OwnerItemCard({ data }) {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
-        const result = await axios.get(`${BASE_URL}/api/item/delete/${data._id}`, { withCredentials: true });
+        const result = await api.get(`${BASE_URL}/api/item/delete/${data._id}`, { withCredentials: true });
         dispatch(setMyShopData(result.data));
       } catch (error) {
         console.error(error);

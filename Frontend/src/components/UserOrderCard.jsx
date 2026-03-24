@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from "../utils/axios";
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BASE_URL } from "../utils/api";
@@ -20,7 +20,7 @@ function UserOrderCard({ data }) {
 
     const handleRating = async (itemId, rating) => {
         try {
-            await axios.post(`${BASE_URL}/api/item/rating`, { itemId, rating }, { withCredentials: true })
+            await api.post(`${BASE_URL}/api/item/rating`, { itemId, rating }, { withCredentials: true })
             setSelectedRating(prev => ({
                 ...prev, [itemId]: rating
             }))

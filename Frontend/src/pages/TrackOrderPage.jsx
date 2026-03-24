@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from '../utils/api';
@@ -25,7 +25,7 @@ function TrackOrderPage() {
   /* ================= API ================= */
   const handleGetOrder = async () => {
     try {
-      const res = await axios.get(
+      const res = await api.get(
         `${BASE_URL}/api/order/get-order-by-id/${orderId}`,
         { withCredentials: true }
       );

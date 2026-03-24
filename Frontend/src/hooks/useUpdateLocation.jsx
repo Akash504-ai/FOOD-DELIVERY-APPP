@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/axios";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../utils/api";
@@ -15,7 +15,7 @@ function useUpdateLocation() {
         // ✅ validate before sending
         if (!lat || !lon) return;
 
-        await axios.post(
+        await api.post(
           `${BASE_URL}/api/user/update-location`,
           { lat, lon },
           { withCredentials: true }

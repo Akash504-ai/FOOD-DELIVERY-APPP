@@ -10,7 +10,7 @@ import {
   FaMap,
   FaCloudUploadAlt,
 } from "react-icons/fa";
-import axios from "axios";
+import api from "../utils/axios";
 import { BASE_URL } from "../utils/api";
 import { setMyShopData } from "../redux/ownerSlice";
 import { ClipLoader } from "react-spinners";
@@ -64,7 +64,7 @@ function CreateEditShop() {
       if (backendImage) {
         formData.append("image", backendImage);
       }
-      const result = await axios.post(
+      const result = await api.post(
         `${BASE_URL}/api/shop/create-edit`,
         formData,
         {

@@ -12,7 +12,7 @@ import "leaflet/dist/leaflet.css";
 import { setAddress, setLocation } from "../redux/mapSlice";
 import { MdDeliveryDining, MdOutlinePayment } from "react-icons/md";
 import { FaCreditCard, FaArrowRight } from "react-icons/fa";
-import axios from "axios";
+import api from "../utils/axios";
 import { FaMobileScreenButton } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from '../utils/api';
@@ -55,7 +55,7 @@ function CheckOut() {
 
   const getAddressByLatLng = async (lat, lng) => {
     try {
-      const result = await axios.get(
+      const result = await api.get(
         `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&format=json&apiKey=${apiKey}`,
       );
       dispatch(setAddress(result?.data?.results[0].address_line2));
@@ -66,7 +66,7 @@ function CheckOut() {
 
   const getLatLngByAddress = async () => {
     try {
-      const result = await axios.get(
+      const result = await api.get(
         `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(addressInput)}&apiKey=${apiKey}`,
       );
       const { lat, lon } = result.data.features[0].properties;
@@ -78,7 +78,7 @@ function CheckOut() {
 
   const handlePlaceOrder = async () => {
     try {
-      const result = await axios.post(
+      const result = await api.post(
         `${BASE_URL}/api/order/place-order`,
         {
           paymentMethod,
@@ -118,7 +118,7 @@ function CheckOut() {
       order_id: razorOrder.id,
       handler: async function (response) {
         try {
-          const result = await axios.post(
+          const result = await api.post(
             `${BASE_URL}/api/order/verify-payment`,
             {
               razorpay_payment_id: response.razorpay_payment_id,
