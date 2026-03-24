@@ -21,31 +21,24 @@ const server = http.createServer(app);
 
 const PORT = process.env.PORT || 5000;
 
-/* ================= CORS CONFIG (FIXED) ================= */
-
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://food-delivery-appp-seven.vercel.app"
-];
+/* ================= CORS (FINAL FIX) ================= */
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // allow Postman
-
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS not allowed"));
-    }
-  },
-  credentials: true,
+  origin: [
+    "http://localhost:5173",
+    "https://food-delivery-appp-seven.vercel.app"
+  ],
+  credentials: true
 }));
 
 /* ================= SOCKET.IO ================= */
 
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: [
+      "http://localhost:5173",
+      "https://food-delivery-appp-seven.vercel.app"
+    ],
     credentials: true,
     methods: ["GET", "POST"],
   },
@@ -55,8 +48,8 @@ app.set("io", io);
 
 /* ================= MIDDLEWARE ================= */
 
+app.use(cookieParser());   // 🔥 FIRST
 app.use(express.json());
-app.use(cookieParser());
 
 /* ================= ROUTES ================= */
 
@@ -67,11 +60,11 @@ app.use("/api/item", itemRouter);
 app.use("/api/order", orderRouter);
 app.use("/api", recommendationRoutes);
 
-/* ================= SOCKET HANDLER ================= */
+/* ================= SOCKET ================= */
 
 socketHandler(io);
 
-/* ================= START SERVER ================= */
+/* ================= START ================= */
 
 server.listen(PORT, () => {
   connectDb();

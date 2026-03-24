@@ -35,8 +35,9 @@ export const signUp = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: isProd, // ✅ true in production
-      sameSite: isProd ? "none" : "lax", // ✅ CRITICAL FIX
+      secure: true, // 🔥 REQUIRED (Render HTTPS)
+      sameSite: "none", // 🔥 REQUIRED (cross-site)
+      path: "/", // 🔥 IMPORTANT
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -64,8 +65,9 @@ export const signIn = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: isProd, // ✅ true in production
-      sameSite: isProd ? "none" : "lax", // ✅ CRITICAL FIX
+      secure: true, // 🔥 REQUIRED (Render HTTPS)
+      sameSite: "none", // 🔥 REQUIRED (cross-site)
+      path: "/", // 🔥 IMPORTANT
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -155,8 +157,9 @@ export const googleAuth = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: isProd, // ✅ true in production
-      sameSite: isProd ? "none" : "lax", // ✅ CRITICAL FIX
+      secure: true, // 🔥 REQUIRED (Render HTTPS)
+      sameSite: "none", // 🔥 REQUIRED (cross-site)
+      path: "/", // 🔥 IMPORTANT
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
