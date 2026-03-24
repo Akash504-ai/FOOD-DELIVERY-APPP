@@ -13,11 +13,15 @@ export const signUp = async (req, res) => {
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ message: "password must be at least 6 characters." });
+      return res
+        .status(400)
+        .json({ message: "password must be at least 6 characters." });
     }
 
     if (mobile.length < 10) {
-      return res.status(400).json({ message: "mobile no must be at least 10 digits." });
+      return res
+        .status(400)
+        .json({ message: "mobile no must be at least 10 digits." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,9 +36,11 @@ export const signUp = async (req, res) => {
 
     const token = genToken(user._id);
 
-    return res.status(201).json({
+    console.log("TOKEN:", token); // DEBUG
+
+    return res.status(200).json({
       user,
-      token,
+      token: String(token), // 🔥 FORCE STRING
     });
   } catch (error) {
     return res.status(500).json(`sign up error ${error}`);
@@ -57,9 +63,11 @@ export const signIn = async (req, res) => {
 
     const token = genToken(user._id);
 
+    console.log("TOKEN:", token); // DEBUG
+
     return res.status(200).json({
       user,
-      token,
+      token: String(token), // 🔥 FORCE STRING
     });
   } catch (error) {
     return res.status(500).json(`sign In error ${error}`);
@@ -160,9 +168,11 @@ export const googleAuth = async (req, res) => {
 
     const token = genToken(user._id);
 
+    console.log("TOKEN:", token); // DEBUG
+
     return res.status(200).json({
       user,
-      token,
+      token: String(token), // 🔥 FORCE STRING
     });
   } catch (error) {
     return res.status(500).json(`googleAuth error ${error}`);
