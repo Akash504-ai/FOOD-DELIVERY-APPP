@@ -13,7 +13,11 @@ function useGetCurrentUser() {
       try {
         const res = await axios.get(
           `${BASE_URL}/api/user/current`,
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          }
         );
         dispatch(setUserData(res.data));
       } catch (error) {

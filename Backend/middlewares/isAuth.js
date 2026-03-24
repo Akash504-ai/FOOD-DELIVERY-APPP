@@ -1,20 +1,22 @@
 import jwt from "jsonwebtoken";
 
-const isAuth = async (req, res, next) => {
+const isAuth = (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return res.status(401).json({ message: "No token" });
+    }
+
+    const token = authHeader.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ message: "Token not found" });
+      return res.status(401).json({ message: "Invalid token" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (!decoded) {
-      return res.status(401).json({ message: "Token not valid" });
-    }
-
-    req.userId = decoded.id; // ✅ FIXED
+    req.userId = decoded.id;
 
     next();
   } catch (error) {
