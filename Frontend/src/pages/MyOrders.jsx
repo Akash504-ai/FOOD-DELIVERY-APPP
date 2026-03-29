@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
-import { FiShoppingBag, FiInbox } from "react-icons/fi";
+import { FiShoppingBag, FiInbox, FiClock } from "react-icons/fi";
 import UserOrderCard from '../components/UserOrderCard';
 import OwnerOrderCard from '../components/OwnerOrderCard';
 import { setMyOrders, updateRealtimeOrderStatus } from '../redux/userSlice';
@@ -32,70 +32,91 @@ function MyOrders() {
   }, [socket, myOrders, userData._id, dispatch])
 
   return (
-    <div className='w-full min-h-screen bg-[#fdfdfd] flex flex-col items-center'>
+    /* Background: Darkened to Slate-100 for maximum card visibility */
+    <div className='w-full min-h-screen bg-[#f1f5f9] flex flex-col items-center relative'>
       
-      {/* Premium Sticky Header */}
-      <div className='w-full sticky top-0 z-[50] bg-white/80 backdrop-blur-lg border-b border-gray-100'>
+      {/* Decorative Gradient Background (Not White) */}
+      <div className='absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-orange-50 to-transparent opacity-60 pointer-events-none' />
+
+      {/* Premium Sticky Header: Stronger border and shadow */}
+      <div className='w-full sticky top-0 z-[50] bg-white border-b border-gray-300 shadow-md'>
         <div className='max-w-[900px] mx-auto px-6 py-4 flex items-center justify-between'>
           <div className='flex items-center gap-4'>
             <button 
               onClick={() => navigate("/")}
-              className='p-2 hover:bg-orange-50 rounded-full transition-all group'
+              className='p-2 bg-gray-100 border border-gray-300 text-gray-800 hover:text-white hover:bg-[#ff4d2d] hover:border-[#ff4d2d] rounded-xl transition-all shadow-sm'
             >
-              <IoIosArrowRoundBack size={32} className='text-gray-700 group-hover:text-[#ff4d2d]' />
+              <IoIosArrowRoundBack size={28} />
             </button>
             <div className='flex flex-col'>
-              <h1 className='text-xl font-black text-gray-900 tracking-tight'>
+              <h1 className='text-2xl font-black text-slate-900 tracking-tight'>
                 {userData.role === "owner" ? "Shop Orders" : "My Orders"}
               </h1>
-              <p className='text-[10px] text-gray-400 font-bold uppercase tracking-widest'>
-                {myOrders?.length || 0} Total Records
-              </p>
+              <div className='flex items-center gap-2'>
+                <p className='text-[11px] text-slate-500 font-black uppercase tracking-widest'>
+                  {myOrders?.length || 0} Records Found
+                </p>
+              </div>
             </div>
           </div>
-          <div className='h-10 w-10 bg-orange-50 rounded-xl flex items-center justify-center text-[#ff4d2d]'>
-            <FiShoppingBag size={20} />
+          
+          <div className='h-12 w-12 bg-[#ff4d2d] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-200'>
+            <FiShoppingBag size={22} />
           </div>
         </div>
       </div>
 
-      <div className='w-full max-w-[850px] p-6'>
+      {/* Main Container with subtle depth */}
+      <div className='w-full max-w-[850px] p-6 mt-4'>
+        
         {/* Orders Feed */}
-        <div className='flex flex-col gap-6 mb-10'>
+        <div className='flex flex-col gap-8 mb-20'>
           {myOrders && myOrders.length > 0 ? (
             myOrders.map((order, index) => (
-              <div key={index} className='animate-in fade-in slide-in-from-bottom-4 duration-500' style={{ animationDelay: `${index * 50}ms` }}>
-                {userData.role === "user" ? (
-                  <UserOrderCard data={order} />
-                ) : userData.role === "owner" ? (
-                  <OwnerOrderCard data={order} />
-                ) : null}
+              <div 
+                key={index} 
+                className='relative animate-in fade-in slide-in-from-bottom-6 duration-500 fill-mode-both' 
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {/* Border Container: This ensures the card has a clear edge even if the Card component itself is white */}
+                <div className='bg-white rounded-[2rem] border border-gray-300 shadow-xl overflow-hidden hover:border-[#ff4d2d] transition-colors duration-300'>
+                  {userData.role === "user" ? (
+                    <UserOrderCard data={order} />
+                  ) : userData.role === "owner" ? (
+                    <OwnerOrderCard data={order} />
+                  ) : null}
+                </div>
               </div>
             ))
           ) : (
-            /* Modern Empty State */
-            <div className='flex flex-col items-center justify-center py-24 text-center'>
-              <div className='bg-gray-50 p-8 rounded-[2.5rem] mb-6'>
-                <FiInbox size={64} className='text-gray-200' />
+            /* Enhanced Empty State for Visibility */
+            <div className='flex flex-col items-center justify-center py-20 px-6 text-center bg-gray-200/50 border-2 border-dashed border-gray-400 rounded-[3rem] mt-10'>
+              <div className='bg-white border border-gray-300 shadow-2xl p-10 rounded-[3rem] mb-8'>
+                <FiInbox size={70} className='text-slate-300' />
               </div>
-              <h2 className='text-2xl font-black text-gray-800 mb-2'>No orders yet</h2>
-              <p className='text-gray-500 max-w-xs'>
+              <h2 className='text-3xl font-black text-slate-800 mb-3'>No activity yet</h2>
+              <p className='text-slate-600 max-w-sm leading-relaxed font-medium mb-10'>
                 {userData.role === "owner" 
-                  ? "Hang tight! New orders from hungry customers will appear here." 
-                  : "Looks like you haven't ordered anything yet. Let's find something delicious!"}
+                  ? "Your shop is ready! Once customers start ordering, they will appear here in real-time." 
+                  : "You haven't placed any orders. Discover the best food in your area and satisfy your cravings!"}
               </p>
               {userData.role === "user" && (
                 <button 
                   onClick={() => navigate("/")}
-                  className='mt-8 bg-[#ff4d2d] text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-orange-100 hover:scale-105 transition-all'
+                  className='bg-[#ff4d2d] hover:bg-[#e64323] text-white px-12 py-4 rounded-2xl font-black shadow-xl shadow-orange-200 transition-all flex items-center gap-3'
                 >
-                  Explore Menu
+                  Start Ordering Now
                 </button>
               )}
             </div>
           )}
         </div>
       </div>
+
+      {/* Footer Branding Overlay (Optional) */}
+      {/* <div className='fixed bottom-4 right-4 pointer-events-none opacity-20'>
+        <h2 className='text-4xl font-black text-slate-900 tracking-tighter'>Foodigo.</h2>
+      </div> */}
     </div>
   )
 }

@@ -1,8 +1,8 @@
 import axios from "axios";
-import { BASE_URL } from "./api.js";
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
@@ -19,12 +19,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      if (window.location.pathname !== "/signin") {
-        window.location.href = "/signin";
-      }
-    }
+    console.log("API ERROR:", error?.response?.status);
     return Promise.reject(error);
   }
 );

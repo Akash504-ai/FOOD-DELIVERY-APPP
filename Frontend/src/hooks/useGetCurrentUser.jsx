@@ -19,10 +19,10 @@ function useGetCurrentUser() {
       }
 
       try {
-        const res = await api.get("/api/user/current")
-        dispatch(setUserData(res.data));
+        const res = await api.get("/api/user/current");
+        dispatch(setUserData(res.data.user || res.data));
       } catch (error) {
-        console.log("ERROR:", error?.response?.data);
+        console.log("USER FETCH ERROR:", error?.response?.status);
       } finally {
         dispatch(setLoading(false));
       }
