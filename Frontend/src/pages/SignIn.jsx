@@ -3,7 +3,7 @@ import { FaRegEye, FaRegEyeSlash, FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/axios";
-import { BASE_URL } from "../utils/api";
+// import { BASE_URL } from "../utils/api";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
@@ -23,7 +23,7 @@ function SignIn() {
   const handleSignIn = async () => {
     setLoading(true);
     try {
-      const { data } = await api.post(`${BASE_URL}/api/auth/signin`, {
+      const { data } = await await api.post(`/api/auth/signin`, {
         email,
         password,
       });
@@ -58,34 +58,39 @@ function SignIn() {
   };
 
   // UI Design Constants
-  const labelStyle = "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1";
-  const inputClass = "w-full bg-white/60 border border-gray-200 rounded-2xl px-11 py-4 outline-none transition-all focus:bg-white focus:border-[#ff4d2d] focus:ring-4 focus:ring-orange-100 shadow-sm placeholder:text-gray-300";
+  const labelStyle =
+    "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1";
+  const inputClass =
+    "w-full bg-white/60 border border-gray-200 rounded-2xl px-11 py-4 outline-none transition-all focus:bg-white focus:border-[#ff4d2d] focus:ring-4 focus:ring-orange-100 shadow-sm placeholder:text-gray-300";
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gray-50 p-6">
-      
       {/* Background Aesthetic Layers */}
       <div className="absolute inset-0 z-0">
-        <img 
-          src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=2000" 
-          alt="Food Background" 
+        <img
+          src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=2000"
+          alt="Food Background"
           className="w-full h-full object-cover opacity-10"
         />
       </div>
-      
+
       {/* Animated Gradient Blobs */}
       <div className="absolute top-1/4 -left-20 w-80 h-80 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-pulse"></div>
       <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-red-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-pulse delay-700"></div>
 
       {/* Login Card */}
       <div className="relative z-10 w-full max-w-md bg-white/80 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_32px_64px_-15px_rgba(0,0,0,0.1)] border border-white p-8 md:p-12">
-        
         {/* Branding */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-black tracking-tighter mb-2" style={{ color: primaryColor }}>
+          <h1
+            className="text-4xl font-black tracking-tighter mb-2"
+            style={{ color: primaryColor }}
+          >
             Foodigo<span className="text-gray-800">.</span>
           </h1>
-          <p className="text-gray-500 font-medium italic">Your favorite meals, delivered fast.</p>
+          <p className="text-gray-500 font-medium italic">
+            Your favorite meals, delivered fast.
+          </p>
         </div>
 
         {/* Form Fields */}
@@ -133,7 +138,11 @@ function SignIn() {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 onClick={() => setShowPassword((prev) => !prev)}
               >
-                {showPassword ? <FaRegEyeSlash size={20} /> : <FaRegEye size={20} />}
+                {showPassword ? (
+                  <FaRegEyeSlash size={20} />
+                ) : (
+                  <FaRegEye size={20} />
+                )}
               </button>
             </div>
           </div>
@@ -158,7 +167,9 @@ function SignIn() {
 
           <div className="flex items-center gap-4 py-2">
             <div className="h-[1px] w-full bg-gray-100"></div>
-            <span className="text-xs font-bold text-gray-300 whitespace-nowrap">OR</span>
+            <span className="text-xs font-bold text-gray-300 whitespace-nowrap">
+              OR
+            </span>
             <div className="h-[1px] w-full bg-gray-100"></div>
           </div>
 

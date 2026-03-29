@@ -14,6 +14,10 @@ function useGetCity() {
   const apiKey = import.meta.env.VITE_GEOAPIKEY;
 
   useEffect(() => {
+    // 🔥 IMPORTANT FIX
+    const token = localStorage.getItem("token");
+    if (!token || !userData) return;
+
     if (!navigator.geolocation) return;
 
     navigator.geolocation.getCurrentPosition(

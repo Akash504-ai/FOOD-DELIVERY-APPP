@@ -13,9 +13,9 @@ import { setAddress, setLocation } from "../redux/mapSlice";
 import { MdDeliveryDining, MdOutlinePayment } from "react-icons/md";
 import { FaCreditCard, FaArrowRight } from "react-icons/fa";
 import api from "../utils/axios";
-import { FaMobileScreenButton } from "react-icons/fa6";
+// import { FaMobileScreenButton } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from '../utils/api';
+import { BASE_URL } from "../utils/api";
 import { addMyOrder } from "../redux/userSlice";
 
 function RecenterMap({ location }) {
@@ -78,64 +78,58 @@ function CheckOut() {
 
   const handlePlaceOrder = async () => {
     try {
-      const result = await api.post(
-        `${BASE_URL}/api/order/place-order`,
-        {
-          paymentMethod,
-          deliveryAddress: {
-            text: addressInput,
-            latitude: location.lat,
-            longitude: location.lon,
-          },
-          totalAmount: AmountWithDeliveryFee,
-          cartItems,
+      const result = await api.post("/api/order/place-order", {
+        paymentMethod,
+        deliveryAddress: {
+          text: addressInput,
+          latitude: location.lat,
+          longitude: location.lon,
         },
-        { withCredentials: true },
-      );
+        totalAmount: AmountWithDeliveryFee,
+        cartItems,
+      });
 
       if (paymentMethod === "cod") {
         dispatch(addMyOrder(result.data));
         navigate("/order-placed");
-      } else if (paymentMethod === "stripe") {
+      }
+
+      if (paymentMethod === "stripe") {
         window.location.href = result.data.checkoutUrl;
-      } else {
-        const orderId = result.data.orderId;
-        const razorOrder = result.data.razorOrder;
-        openRazorpayWindow(orderId, razorOrder);
       }
     } catch (error) {
       console.log("FULL ERROR:", error.response?.data);
     }
   };
 
-  const openRazorpayWindow = (orderId, razorOrder) => {
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: razorOrder.amount,
-      currency: "INR",
-      name: "Vingo",
-      description: "Food Delivery Website",
-      order_id: razorOrder.id,
-      handler: async function (response) {
-        try {
-          const result = await api.post(
-            `${BASE_URL}/api/order/verify-payment`,
-            {
-              razorpay_payment_id: response.razorpay_payment_id,
-              orderId,
-            },
-            { withCredentials: true },
-          );
-          dispatch(addMyOrder(result.data));
-          navigate("/order-placed");
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    };
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  };
+  // const openRazorpayWindow = (orderId, razorOrder) => {
+  //   const options = {
+  //     key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+  //     amount: razorOrder.amount,
+  //     currency: "INR",
+  //     name: "Vingo",
+  //     description: "Food Delivery Website",
+  //     order_id: razorOrder.id,
+  //     handler: async function (response) {
+  //       try {
+  //         const result = await api.post(
+  //           `${BASE_URL}/api/order/verify-payment`,
+  //           {
+  //             razorpay_payment_id: response.razorpay_payment_id,
+  //             orderId,
+  //           },
+  //           { withCredentials: true },
+  //         );
+  //         dispatch(addMyOrder(result.data));
+  //         navigate("/order-placed");
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     },
+  //   };
+  //   const rzp = new window.Razorpay(options);
+  //   rzp.open();
+  // };
 
   useEffect(() => {
     setAddressInput(address || "");
@@ -257,23 +251,18 @@ function CheckOut() {
                 </div>
 
                 <div
-                  className={`group cursor-pointer flex items-center gap-4 rounded-[2rem] border-2 p-6 transition-all duration-300 ${paymentMethod === "online" ? "border-[#ff4d2d] bg-orange-50/50 shadow-md" : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"}`}
-                  // onClick={() => setPaymentMethod("online")}
-                  onClick={() => setPaymentMethod("stripe")}
+                  className="group flex items-center gap-4 rounded-[2rem] border-2 p-6 
+                  border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed"
                 >
-                  <div
-                    className={`p-4 rounded-2xl transition-colors ${paymentMethod === "stripe" ? "bg-[#ff4d2d] text-white" : "bg-gray-100 text-gray-400 group-hover:text-gray-600"}`}
-                  >
+                  <div className="p-4 rounded-2xl bg-gray-200 text-gray-400">
                     <FaCreditCard size={24} />
                   </div>
+
+                  {/* Secure Card Payment via Stripe */}
                   <div>
-                    {/* <p className="font-bold text-gray-800">Online Payment</p>
+                    <p className="font-bold text-gray-500">Stripe Payment</p>
                     <p className="text-xs font-medium text-gray-400 uppercase tracking-tighter mt-0.5">
-                      UPI, Cards or Netbanking
-                    </p> */}
-                    <p className="font-bold text-gray-800">Stripe Payment</p>
-                    <p className="text-xs font-medium text-gray-400 uppercase tracking-tighter mt-0.5">
-                      Secure Card Payments via Stripe
+                      Coming Soon
                     </p>
                   </div>
                 </div>

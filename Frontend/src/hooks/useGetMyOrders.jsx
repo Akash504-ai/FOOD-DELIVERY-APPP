@@ -9,22 +9,24 @@ function useGetMyOrders() {
   const { userData } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (!userData) return; // 🔥 important
+    // 🔥 IMPORTANT FIX
+    const token = localStorage.getItem("token");
+    if (!token || !userData) return;
 
     const fetchOrders = async () => {
       try {
         const result = await api.get(
-          `${BASE_URL}/api/order/my-orders`,
-          { withCredentials: true }
+          `${BASE_URL}/api/order/my-orders`
         );
+
         dispatch(setMyOrders(result.data));
       } catch (error) {
-        console.log(error);
+        console.log("GET ORDERS ERROR:", error?.response?.data);
       }
     };
 
     fetchOrders();
-  }, [userData]);
+  }, [userData, dispatch]);
 }
 
 export default useGetMyOrders;

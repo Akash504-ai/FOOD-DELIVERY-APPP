@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaCheckCircle, FaArrowRight } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import api from '../utils/axios'; // ⚠️ adjust path if needed
 
 function OrderPlaced() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const session_id = params.get("session_id");
+        const orderId = params.get("orderId");
+
+        // 🔥 VERIFY STRIPE PAYMENT
+        if (session_id && orderId) {
+            api.post("/verify-stripe-payment", { session_id, orderId })
+                .then(() => {
+                    console.log("✅ Payment verified");
+                })
+                .catch((err) => {
+                    console.error("❌ Payment verification failed:", err);
+                });
+        }
+    }, []);
 
     return (
         <div className='min-h-screen bg-[#fcfcfc] flex flex-col justify-center items-center px-4 text-center relative overflow-hidden'>
@@ -15,7 +33,7 @@ function OrderPlaced() {
             {/* Success Content Card */}
             <div className='max-w-lg w-full bg-white/70 backdrop-blur-xl p-10 md:p-16 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-white z-10'>
                 
-                {/* Animated Icon Container */}
+                {/* Animated Icon */}
                 <div className='inline-flex items-center justify-center w-24 h-24 bg-green-50 rounded-full mb-8 relative'>
                     <div className='absolute inset-0 bg-green-200 rounded-full animate-ping opacity-20' />
                     <FaCheckCircle className='text-green-500 text-6xl relative z-10' />

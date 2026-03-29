@@ -83,7 +83,7 @@ function Nav() {
           <span className="text-white font-black text-2xl">V</span>
         </div>
         <h1 className="text-2xl font-black tracking-tight text-gray-900 hidden sm:block">
-          Vingo<span className="text-[#ff4d2d]">.</span>
+          Foodigo<span className="text-[#ff4d2d]">.</span>
         </h1>
       </div>
 

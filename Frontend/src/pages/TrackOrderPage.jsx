@@ -1,13 +1,11 @@
 import api from "../utils/axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BASE_URL } from '../utils/api';
+import { BASE_URL } from "../utils/api";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import {
   FiPackage,
   FiMapPin,
-  FiPhone,
-  FiUser,
   FiCheckCircle,
   FiClock,
   FiTruck,
@@ -27,7 +25,7 @@ function TrackOrderPage() {
     try {
       const res = await api.get(
         `${BASE_URL}/api/order/get-order-by-id/${orderId}`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setCurrentOrder(res.data);
     } catch (err) {
@@ -41,50 +39,77 @@ function TrackOrderPage() {
     handleGetOrder();
   }, [orderId]);
 
-  /* ================= POLLING ================= */
+  /* ================= SOCKET ROOM ================= */
   useEffect(() => {
     if (!orderId) return;
 
-    const interval = setInterval(handleGetOrder, 15000);
-    return () => clearInterval(interval);
+    // join room for this order
+    socket.emit("joinOrderRoom", orderId);
+
+    return () => {
+      socket.emit("leaveOrderRoom", orderId);
+    };
   }, [orderId]);
 
-  /* ================= SOCKET ================= */
+  /* ================= SOCKET LISTENER ================= */
   useEffect(() => {
     if (!orderId) return;
 
-    const handler = ({ deliveryBoyId, latitude, longitude }) => {
-      setLiveLocations(prev => ({
+    const handler = ({
+      deliveryBoyId,
+      latitude,
+      longitude,
+      orderId: incomingOrderId,
+    }) => {
+      // 🔴 filter only this order updates
+      if (incomingOrderId !== orderId) return;
+
+      setLiveLocations((prev) => ({
         ...prev,
         [deliveryBoyId]: { lat: latitude, lon: longitude },
       }));
     };
 
     socket.on("updateDeliveryLocation", handler);
-    return () => socket.off("updateDeliveryLocation", handler);
+
+    return () => {
+      socket.off("updateDeliveryLocation", handler);
+    };
+  }, [orderId]);
+
+  /* ================= POLLING (fallback only) ================= */
+  useEffect(() => {
+    if (!orderId) return;
+
+    const interval = setInterval(handleGetOrder, 30000); // slower
+
+    return () => clearInterval(interval);
   }, [orderId]);
 
   /* ================= STEPPER ================= */
   const StatusStepper = ({ status, hasDeliveryBoy }) => {
+    const normalizedStatus = status?.toLowerCase().replace(/\s+/g, "-");
     const steps = [
       { label: "Confirmed", icon: <FiCheckCircle />, active: true },
       {
         label: "Preparing",
         icon: <FiClock />,
-        active: ["preparing", "out-for-delivery", "delivered"].includes(status),
+        active: ["preparing", "out-for-delivery", "delivered"].includes(
+          normalizedStatus,
+        ),
       },
       {
         label: "On the way",
         icon: <FiTruck />,
         active:
-          status === "out-for-delivery" ||
-          status === "delivered" ||
+          normalizedStatus === "out-for-delivery" ||
+          normalizedStatus === "delivered" ||
           hasDeliveryBoy,
       },
       {
         label: "Delivered",
         icon: <FiPackage />,
-        active: status === "delivered",
+        active: normalizedStatus === "delivered",
       },
     ];
 
@@ -147,10 +172,21 @@ function TrackOrderPage() {
       {/* Content */}
       <div className="max-w-4xl mx-auto p-4 mt-6 space-y-10">
         {currentOrder?.shopOrders?.map((shopOrder, index) => {
-          const canShowMap =
-            shopOrder.assignedDeliveryBoy &&
-            (liveLocations[shopOrder.assignedDeliveryBoy._id] ||
-              shopOrder.assignedDeliveryBoy.location);
+          const deliveryBoy = shopOrder.assignedDeliveryBoy;
+
+          // ✅ correct location priority
+          const live = deliveryBoy ? liveLocations[deliveryBoy._id] : null;
+
+          const fallback = deliveryBoy?.location
+            ? {
+                lat: deliveryBoy.location.coordinates[1],
+                lon: deliveryBoy.location.coordinates[0],
+              }
+            : null;
+
+          const finalLocation = live || fallback;
+
+          const canShowMap = deliveryBoy && finalLocation;
 
           return (
             <div
@@ -160,21 +196,17 @@ function TrackOrderPage() {
               <div className="p-8 pb-0">
                 <StatusStepper
                   status={shopOrder.status}
-                  hasDeliveryBoy={!!shopOrder.assignedDeliveryBoy}
+                  hasDeliveryBoy={!!deliveryBoy}
                 />
               </div>
 
               <div className="p-8 space-y-6">
-                {shopOrder.assignedDeliveryBoy && (
+                {deliveryBoy && (
                   <div className="h-[450px] rounded-[2rem] overflow-hidden border">
                     {canShowMap && (
                       <DeliveryBoyTracking
                         data={{
-                          deliveryBoyLocation:
-                            liveLocations[shopOrder.assignedDeliveryBoy._id] || {
-                              lat: shopOrder.assignedDeliveryBoy.location.coordinates[1],
-                              lon: shopOrder.assignedDeliveryBoy.location.coordinates[0],
-                            },
+                          deliveryBoyLocation: finalLocation,
                           customerLocation: {
                             lat: currentOrder.deliveryAddress.latitude,
                             lon: currentOrder.deliveryAddress.longitude,

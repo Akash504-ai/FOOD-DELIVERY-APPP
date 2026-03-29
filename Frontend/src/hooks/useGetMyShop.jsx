@@ -9,22 +9,24 @@ function useGetMyshop() {
   const { userData } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (!userData) return; // 🔥 important
+    // 🔥 IMPORTANT FIX
+    const token = localStorage.getItem("token");
+    if (!token || !userData) return;
 
     const fetchShop = async () => {
       try {
         const result = await api.get(
-          `${BASE_URL}/api/shop/get-my`,
-          { withCredentials: true }
+          `${BASE_URL}/api/shop/get-my`
         );
+
         dispatch(setMyShopData(result.data));
       } catch (error) {
-        console.log(error);
+        console.log("GET MY SHOP ERROR:", error?.response?.data);
       }
     };
 
     fetchShop();
-  }, [userData]);
+  }, [userData, dispatch]);
 }
 
 export default useGetMyshop;
