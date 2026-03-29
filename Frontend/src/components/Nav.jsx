@@ -80,7 +80,7 @@ function Nav() {
         onClick={() => navigate("/")}
       >
         <div className="w-11 h-11 bg-[#ff4d2d] rounded-2xl flex items-center justify-center shadow-[0_10px_20px_rgba(255,77,45,0.3)]">
-          <span className="text-white font-black text-2xl">V</span>
+          <span className="text-white font-black text-2xl">F</span>
         </div>
         <h1 className="text-2xl font-black tracking-tight text-gray-900 hidden sm:block">
           Foodigo<span className="text-[#ff4d2d]">.</span>
