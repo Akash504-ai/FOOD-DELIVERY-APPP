@@ -16,13 +16,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle unauthorized globally
 api.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/login"; // ok for now
+      if (window.location.pathname !== "/signin") {
+        window.location.href = "/signin";
+      }
     }
     return Promise.reject(error);
   }

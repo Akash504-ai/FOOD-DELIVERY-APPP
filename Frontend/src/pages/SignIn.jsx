@@ -29,11 +29,6 @@ function SignIn() {
       });
 
       console.log("LOGIN RESPONSE:", data);
-
-      localStorage.setItem("token", data.token);
-
-      console.log("TOKEN SAVED:", localStorage.getItem("token"));
-
       localStorage.setItem("token", data.token);
       dispatch(setUserData(data.user));
       setErr("");
@@ -62,113 +57,130 @@ function SignIn() {
     }
   };
 
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center p-6 bg-gradient-to-br from-[#fff9f6] to-[#fff1ed]">
-      <div className="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(255,77,45,0.08)] w-full max-w-md p-10 border border-orange-50 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-[#ff4d2d] opacity-[0.03] rounded-full -mr-16 -mt-16"></div>
+  // UI Design Constants
+  const labelStyle = "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1";
+  const inputClass = "w-full bg-white/60 border border-gray-200 rounded-2xl px-11 py-4 outline-none transition-all focus:bg-white focus:border-[#ff4d2d] focus:ring-4 focus:ring-orange-100 shadow-sm placeholder:text-gray-300";
 
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gray-50 p-6">
+      
+      {/* Background Aesthetic Layers */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=2000" 
+          alt="Food Background" 
+          className="w-full h-full object-cover opacity-10"
+        />
+      </div>
+      
+      {/* Animated Gradient Blobs */}
+      <div className="absolute top-1/4 -left-20 w-80 h-80 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-pulse"></div>
+      <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-red-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-pulse delay-700"></div>
+
+      {/* Login Card */}
+      <div className="relative z-10 w-full max-w-md bg-white/80 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_32px_64px_-15px_rgba(0,0,0,0.1)] border border-white p-8 md:p-12">
+        
+        {/* Branding */}
         <div className="text-center mb-10">
-          <h1
-            className="text-4xl font-black mb-3 tracking-tight"
-            style={{ color: primaryColor }}
-          >
-            Vingo<span className="text-gray-800">.</span>
+          <h1 className="text-4xl font-black tracking-tighter mb-2" style={{ color: primaryColor }}>
+            Foodigo<span className="text-gray-800">.</span>
           </h1>
-          <p className="text-gray-500 font-medium">
-            Welcome back! Please enter your details.
-          </p>
+          <p className="text-gray-500 font-medium italic">Your favorite meals, delivered fast.</p>
         </div>
 
+        {/* Form Fields */}
         <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">
-              Email Address
-            </label>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
-                <FaEnvelope size={16} />
+          <div className="group relative">
+            <label className={labelStyle}>Email Address</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 group-focus-within:text-[#ff4d2d] transition-colors">
+                <FaEnvelope size={18} />
               </div>
               <input
                 type="email"
-                className="w-full bg-gray-50 rounded-2xl px-11 py-3.5 outline-none"
-                placeholder="name@example.com"
+                className={inputClass}
+                placeholder="hello@example.com"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
               />
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">
-              Password
-            </label>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
-                <FaLock size={16} />
+          <div className="group relative">
+            <div className="flex justify-between items-center mb-2 ml-1">
+              <label className={labelStyle}>Password</label>
+              <button
+                type="button"
+                className="text-xs font-bold text-[#ff4d2d] hover:underline"
+                onClick={() => navigate("/forgot-password")}
+              >
+                Forgot?
+              </button>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 group-focus-within:text-[#ff4d2d] transition-colors">
+                <FaLock size={18} />
               </div>
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full bg-gray-50 rounded-2xl px-11 py-3.5 outline-none"
+                className={inputClass}
                 placeholder="••••••••"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
               />
               <button
                 type="button"
-                className="absolute right-4 top-1/2 -translate-y-1/2"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 onClick={() => setShowPassword((prev) => !prev)}
               >
-                {!showPassword ? (
-                  <FaRegEye size={18} />
-                ) : (
-                  <FaRegEyeSlash size={18} />
-                )}
+                {showPassword ? <FaRegEyeSlash size={20} /> : <FaRegEye size={20} />}
               </button>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end mt-3 mb-8">
+        {/* Error Message */}
+        {err && (
+          <div className="mt-6 p-3 bg-red-50 border-l-4 border-red-500 rounded-r-xl">
+            <p className="text-red-600 text-sm font-semibold">{err}</p>
+          </div>
+        )}
+
+        {/* Sign In Button */}
+        <div className="mt-8 space-y-4">
           <button
-            className="text-sm font-bold text-[#ff4d2d]"
-            onClick={() => navigate("/forgot-password")}
+            className="w-full bg-gradient-to-r from-[#ff4d2d] to-[#ff7b2d] text-white font-bold py-4 rounded-2xl shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center text-lg"
+            onClick={handleSignIn}
+            disabled={loading}
           >
-            Forgot Password?
+            {loading ? <ClipLoader size={24} color="white" /> : "Sign In"}
+          </button>
+
+          <div className="flex items-center gap-4 py-2">
+            <div className="h-[1px] w-full bg-gray-100"></div>
+            <span className="text-xs font-bold text-gray-300 whitespace-nowrap">OR</span>
+            <div className="h-[1px] w-full bg-gray-100"></div>
+          </div>
+
+          {/* Google Button */}
+          <button
+            className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 py-3.5 rounded-2xl font-bold text-gray-700 hover:bg-gray-50 transition-all shadow-sm active:scale-[0.98]"
+            onClick={handleGoogleAuth}
+          >
+            <FcGoogle size={24} />
+            <span>Continue with Google</span>
           </button>
         </div>
 
-        <button
-          className="w-full bg-[#ff4d2d] text-white font-bold py-4 rounded-2xl"
-          onClick={handleSignIn}
-          disabled={loading}
-        >
-          {loading ? <ClipLoader size={20} color="white" /> : "Sign In"}
-        </button>
-
-        {err && (
-          <div className="mt-4 text-red-500 text-center text-sm">{err}</div>
-        )}
-
-        <div className="my-8 text-center text-gray-400 text-xs">
-          OR CONTINUE WITH
-        </div>
-
-        <button
-          className="w-full flex items-center justify-center gap-3 border rounded-2xl py-3"
-          onClick={handleGoogleAuth}
-        >
-          <FcGoogle size={22} />
-          <span>Google</span>
-        </button>
-
-        <p className="text-center mt-8 text-gray-500">
-          New to Vingo?
-          <span
-            className="text-[#ff4d2d] font-bold ml-2 cursor-pointer"
+        {/* Footer */}
+        <p className="text-center mt-10 text-gray-500 font-medium">
+          New to Foodigo?
+          <button
+            className="text-[#ff4d2d] font-black ml-2 hover:underline underline-offset-4"
             onClick={() => navigate("/signup")}
           >
             Create Account
-          </span>
+          </button>
         </p>
       </div>
     </div>

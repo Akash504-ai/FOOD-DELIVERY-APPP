@@ -29,9 +29,13 @@ import useUpdateLocation from "./hooks/useUpdateLocation";
 export const serverUrl = import.meta.env.VITE_API_URL;
 const ProtectedRoute = ({ children }) => {
   const { userData, loading } = useSelector((state) => state.user);
+  const token = localStorage.getItem("token"); // ⭐ ADD THIS
 
   if (loading) return null;
-  if (!userData) return <Navigate to="/signin" />;
+
+  if (!token || !userData) {
+    return <Navigate to="/signin" />;
+  }
 
   return children;
 };
