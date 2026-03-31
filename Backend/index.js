@@ -27,7 +27,8 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   "http://localhost:5173",
   "https://food-delivery-appp-seven.vercel.app",
-  "https://food-delivery-appp-kt36-git-main-akash-santra-s-projects.vercel.app"
+  "https://food-delivery-appp-kt36-git-main-akash-santra-s-projects.vercel.app",
+  "https://food-delivery-appp-su3d.vercel.app" // ✅ ADD THIS
 ];
 
 app.use(cors({
