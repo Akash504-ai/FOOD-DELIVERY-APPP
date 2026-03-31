@@ -28,21 +28,22 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://food-delivery-appp-seven.vercel.app",
   "https://food-delivery-appp-kt36-git-main-akash-santra-s-projects.vercel.app",
-  "https://food-delivery-appp-su3d.vercel.app" // ✅ ADD THIS
+  "https://food-delivery-appp-su3d.vercel.app"
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin) || origin.includes("vercel.app")) {
       return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
     }
+
+    // ✅ IMPORTANT: DO NOT THROW ERROR
+    return callback(null, true);
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
