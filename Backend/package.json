@@ -10,6 +10,7 @@
   "author": "Virtual code",
   "license": "ISC",
   "dependencies": {
+    "@getbrevo/brevo": "^5.0.3",
     "axios": "^1.13.6",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",

@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import genToken from "../utils/token.js";
-import { sendOtpMail } from "../utils/mail.js";
+import { sendOtpMail, sendWelcomeMail, sendResetSuccessMail } from "../utils/mail.js";
 
 export const signUp = async (req, res) => {
   try {
@@ -13,15 +13,11 @@ export const signUp = async (req, res) => {
     }
 
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "password must be at least 6 characters." });
+      return res.status(400).json({ message: "password must be at least 6 characters." });
     }
 
     if (mobile.length < 10) {
-      return res
-        .status(400)
-        .json({ message: "mobile no must be at least 10 digits." });
+      return res.status(400).json({ message: "mobile no must be at least 10 digits." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -34,14 +30,16 @@ export const signUp = async (req, res) => {
       password: hashedPassword,
     });
 
-    const token = genToken(user._id);
+    // 🔥 SEND WELCOME EMAIL
+    await sendWelcomeMail(email, fullName);
 
-    console.log("TOKEN:", token); // DEBUG
+    const token = genToken(user._id);
 
     return res.status(200).json({
       user,
-      token: String(token), // 🔥 FORCE STRING
+      token: String(token),
     });
+
   } catch (error) {
     return res.status(500).json(`sign up error ${error}`);
   }
@@ -67,7 +65,7 @@ export const signIn = async (req, res) => {
 
     return res.status(200).json({
       user,
-      token: String(token), // 🔥 FORCE STRING
+      token: String(token),
     });
   } catch (error) {
     return res.status(500).json(`sign In error ${error}`);
@@ -145,7 +143,11 @@ export const resetPassword = async (req, res) => {
 
     await user.save();
 
+    // 🔥 SEND EMAIL
+    await sendResetSuccessMail(email);
+
     return res.status(200).json({ message: "password reset successfully" });
+
   } catch (error) {
     return res.status(500).json(`reset password error ${error}`);
   }

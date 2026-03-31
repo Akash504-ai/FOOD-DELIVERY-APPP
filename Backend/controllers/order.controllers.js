@@ -2,7 +2,10 @@ import DeliveryAssignment from "../models/deliveryAssignment.model.js";
 import Order from "../models/order.model.js";
 import Shop from "../models/shop.model.js";
 import User from "../models/user.model.js";
-import { sendDeliveryOtpMail } from "../utils/mail.js";
+import { 
+  sendDeliverySuccessMail,
+  sendDeliveryOtpMail 
+} from "../utils/mail.js";
 // import RazorPay from "razorpay";
 import dotenv from "dotenv";
 import { count } from "console";
@@ -576,21 +579,39 @@ export const getOrderById = async (req, res) => {
 export const sendDeliveryOtp = async (req, res) => {
   try {
     const { orderId, shopOrderId } = req.body;
+
     const order = await Order.findById(orderId).populate("user");
-    const shopOrder = order.shopOrders.id(shopOrderId);
-    if (!order || !shopOrder) {
-      return res.status(400).json({ message: "enter valid order/shopOrderid" });
+    if (!order) {
+      return res.status(400).json({ message: "Order not found" });
     }
+
+    const shopOrder = order.shopOrders.id(shopOrderId);
+    if (!shopOrder) {
+      return res.status(400).json({ message: "Shop order not found" });
+    }
+
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
+
     shopOrder.deliveryOtp = otp;
     shopOrder.otpExpires = Date.now() + 5 * 60 * 1000;
+
     await order.save();
-    await sendDeliveryOtpMail(order.user, otp);
-    return res
-      .status(200)
-      .json({ message: `Otp sent Successfuly to ${order?.user?.fullName}` });
+
+    // 🔥 SEND EMAIL SAFELY
+    try {
+      await sendDeliveryOtpMail(order.user.email, otp);
+    } catch (err) {
+      console.log("Delivery OTP email failed:", err.message);
+    }
+
+    return res.status(200).json({
+      message: `OTP sent to ${order.user.fullName}`,
+    });
+
   } catch (error) {
-    return res.status(500).json({ message: `delivery otp error ${error}` });
+    return res.status(500).json({
+      message: `delivery otp error ${error.message}`,
+    });
   }
 };
 
@@ -598,24 +619,20 @@ export const verifyDeliveryOtp = async (req, res) => {
   try {
     const { orderId, shopOrderId, otp } = req.body;
 
-    // 1️⃣ Basic validation
     if (!orderId || !shopOrderId || !otp) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // 2️⃣ Fetch order
     const order = await Order.findById(orderId).populate("user");
     if (!order) {
       return res.status(400).json({ message: "Order not found" });
     }
 
-    // 3️⃣ Fetch shopOrder safely
     const shopOrder = order.shopOrders.id(shopOrderId);
     if (!shopOrder) {
       return res.status(400).json({ message: "Shop order not found" });
     }
 
-    // 4️⃣ OTP validation (🔥 THIS WAS THE MAIN BUG)
     const savedOtp = String(shopOrder.deliveryOtp || "").trim();
     const userOtp = String(otp).trim();
 
@@ -628,26 +645,29 @@ export const verifyDeliveryOtp = async (req, res) => {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 
-    // 5️⃣ Mark delivered
     shopOrder.status = "delivered";
     shopOrder.deliveredAt = new Date();
-
-    // 6️⃣ Clear OTP (IMPORTANT)
     shopOrder.deliveryOtp = null;
     shopOrder.otpExpires = null;
 
     await order.save();
 
-    // 7️⃣ Remove delivery assignment
     await DeliveryAssignment.deleteOne({
       order: order._id,
       shopOrderId: shopOrder._id,
       assignedTo: shopOrder.assignedDeliveryBoy,
     });
 
+    try {
+      await sendDeliverySuccessMail(order.user.email);
+    } catch (err) {
+      console.log("Delivery success email failed:", err.message);
+    }
+
     return res.status(200).json({
       message: "Order Delivered Successfully!",
     });
+
   } catch (error) {
     console.error("verifyDeliveryOtp error:", error);
     return res.status(500).json({
