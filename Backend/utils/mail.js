@@ -1,4 +1,4 @@
-import Brevo from "@getbrevo/brevo";
+import * as Brevo from "@getbrevo/brevo";
 
 const apiInstance = new Brevo.TransactionalEmailsApi();
 
@@ -12,7 +12,6 @@ const sender = {
   email: "your_verified_email@brevo.com",
 };
 
-// ✅ Welcome Email
 export const sendWelcomeMail = async (toEmail, name) => {
   const email = new Brevo.SendSmtpEmail();
 
@@ -30,7 +29,6 @@ export const sendWelcomeMail = async (toEmail, name) => {
   await apiInstance.sendTransacEmail(email);
 };
 
-// ✅ Auth OTP
 export const sendOtpMail = async (toEmail, otp) => {
   const email = new Brevo.SendSmtpEmail();
 
@@ -47,7 +45,6 @@ export const sendOtpMail = async (toEmail, otp) => {
   await apiInstance.sendTransacEmail(email);
 };
 
-// ✅ Password Reset Success
 export const sendResetSuccessMail = async (toEmail) => {
   const email = new Brevo.SendSmtpEmail();
 
@@ -63,7 +60,6 @@ export const sendResetSuccessMail = async (toEmail) => {
   await apiInstance.sendTransacEmail(email);
 };
 
-// ✅ Delivery OTP
 export const sendDeliveryOtpMail = async (toEmail, otp) => {
   const email = new Brevo.SendSmtpEmail();
 
@@ -80,7 +76,6 @@ export const sendDeliveryOtpMail = async (toEmail, otp) => {
   await apiInstance.sendTransacEmail(email);
 };
 
-// ✅ Delivery Success
 export const sendDeliverySuccessMail = async (toEmail) => {
   const email = new Brevo.SendSmtpEmail();
 
