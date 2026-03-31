@@ -7,11 +7,11 @@ import {
   FaPhoneAlt,
   FaLock,
 } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc"; // Commented out Google Icon
 import { useNavigate } from "react-router-dom";
 import api from "../utils/axios";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../../firebase";
+// import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"; // Commented out Firebase Auth
+// import { auth } from "../../firebase"; // Commented out Firebase Config
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
@@ -45,9 +45,10 @@ function SignUp() {
       });
 
       localStorage.setItem("token", result.data.token);
-
       dispatch(setUserData(result.data.user));
       setErr("");
+      
+      // Optional: navigate("/dashboard");
     } catch (error) {
       console.log("SIGNUP ERROR:", error?.response?.data);
       setErr(error?.response?.data?.message || "Registration failed");
@@ -56,6 +57,7 @@ function SignUp() {
     }
   };
 
+  /* // Commented out Google Authentication Logic
   const handleGoogleAuth = async () => {
     if (!mobile) {
       return setErr("Mobile number is required for Google Sign-up");
@@ -80,6 +82,7 @@ function SignUp() {
       setErr("Google authentication failed");
     }
   };
+  */
 
   // UI Enhancement Classes
   const inputWrapper = "relative group";
@@ -207,6 +210,7 @@ function SignUp() {
                 {loading ? <ClipLoader size={24} color="white" /> : "Create Account"}
               </button>
 
+              {/* Commented out Google Divider and Button UI
               <div className="relative flex items-center justify-center py-2">
                 <div className="border-t border-gray-200 w-full"></div>
                 <span className="bg-white px-4 text-sm text-gray-400 absolute">or</span>
@@ -219,6 +223,7 @@ function SignUp() {
                 <FcGoogle size={22} />
                 Continue with Google
               </button>
+              */}
             </div>
 
             {/* Footer Link */}

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { FaRegEye, FaRegEyeSlash, FaEnvelope, FaLock } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc"; // Commented out Google Icon
 import { useNavigate } from "react-router-dom";
 import api from "../utils/axios";
 // import { BASE_URL } from "../utils/api";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../../firebase";
+// import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"; // Commented out Firebase Auth
+// import { auth } from "../../firebase"; // Commented out Firebase Config
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
@@ -23,7 +23,8 @@ function SignIn() {
   const handleSignIn = async () => {
     setLoading(true);
     try {
-      const { data } = await await api.post(`/api/auth/signin`, {
+      // Fixed: Removed double await
+      const { data } = await api.post(`/api/auth/signin`, {
         email,
         password,
       });
@@ -32,6 +33,9 @@ function SignIn() {
       localStorage.setItem("token", data.token);
       dispatch(setUserData(data.user));
       setErr("");
+      
+      // Optional: Navigate to dashboard on success
+      // navigate("/dashboard"); 
     } catch (error) {
       setErr(error?.response?.data?.message || "Something went wrong");
     } finally {
@@ -39,6 +43,7 @@ function SignIn() {
     }
   };
 
+  /* // Commented out Google Authentication Logic
   const handleGoogleAuth = async () => {
     const provider = new GoogleAuthProvider();
     try {
@@ -56,6 +61,7 @@ function SignIn() {
       setErr("Google login failed");
     }
   };
+  */
 
   // UI Design Constants
   const labelStyle =
@@ -165,6 +171,7 @@ function SignIn() {
             {loading ? <ClipLoader size={24} color="white" /> : "Sign In"}
           </button>
 
+          {/* // Commented out the "OR" separator and Google Button UI
           <div className="flex items-center gap-4 py-2">
             <div className="h-[1px] w-full bg-gray-100"></div>
             <span className="text-xs font-bold text-gray-300 whitespace-nowrap">
@@ -173,14 +180,14 @@ function SignIn() {
             <div className="h-[1px] w-full bg-gray-100"></div>
           </div>
 
-          {/* Google Button */}
           <button
             className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 py-3.5 rounded-2xl font-bold text-gray-700 hover:bg-gray-50 transition-all shadow-sm active:scale-[0.98]"
             onClick={handleGoogleAuth}
           >
             <FcGoogle size={24} />
             <span>Continue with Google</span>
-          </button>
+          </button> 
+          */}
         </div>
 
         {/* Footer */}
