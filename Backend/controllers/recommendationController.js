@@ -8,14 +8,12 @@ export const recommendItems = async (req, res) => {
   try {
     const { itemId } = req.params;
 
-    // ✅ Call ML API
     const response = await axios.get(
       `${ML_API}/recommend/${itemId}`
     );
 
     const ids = response.data.recommendations;
 
-    // ✅ Fetch items from DB
     const items = await Item.find({
       _id: { $in: ids }
     });

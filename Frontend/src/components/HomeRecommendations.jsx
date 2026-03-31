@@ -41,7 +41,6 @@ function HomeRecommendations({ itemId }) {
     scrollRef.current.scrollBy({ left: offset, behavior: "smooth" });
   };
 
-  // ✅ EMPTY STATE (for new users)
   if (!isLoading && items.length === 0) {
     return (
       <section className="max-w-7xl mx-auto px-4 md:px-8 py-12 text-center">
@@ -61,19 +60,16 @@ function HomeRecommendations({ itemId }) {
             <div className="p-2 bg-orange-100 rounded-lg">
               <FaFire className="text-orange-600" />
             </div>
-            {/* ✅ FIXED TITLE */}
             <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900">
               You may also like
             </h2>
           </div>
 
-          {/* ✅ FIXED SUBTEXT */}
           <p className="text-gray-500 text-sm md:text-base">
             Similar items based on your activity
           </p>
         </div>
 
-        {/* Navigation Buttons */}
         <div className="hidden md:flex gap-3">
           <button
             onClick={() => scroll("left")}
@@ -103,7 +99,6 @@ function HomeRecommendations({ itemId }) {
         </div>
       </div>
 
-      {/* Slider */}
       <div
         ref={scrollRef}
         onScroll={checkScrollLimits}
