@@ -20,13 +20,13 @@ The Food Delivery Application is a comprehensive platform designed to facilitate
 ## Architecture Overview
 ```mermaid
 graph LR
-    A[Client] -->|HTTP Request|> B[Load Balancer]
-    B -->|HTTP Request|> C[Server]
-    C -->|Database Query|> D[Database]
-    D -->|Data|> C
-    C -->|HTTP Response|> B
-    B -->|HTTP Response|> A
-    C -->|Socket.IO|> A
+    A[Client] -->|HTTP Request|  B[Load Balancer]
+    B -->|HTTP Request|  C[Server]
+    C -->|Database Query|  D[Database]
+    D -->|Data|  C
+    C -->|HTTP Response|  B
+    B -->|HTTP Response|  A
+    C -->|Socket.IO|  A
 ```
 The architecture of the Food Delivery Application consists of a client-side application built using React, a server-side application built using Node.js and Express.js, and a database built using MongoDB. The client and server communicate using RESTful APIs, and real-time updates are facilitated using Socket.IO.
 
@@ -44,7 +44,7 @@ To install the application, follow these steps:
 To use the application, follow these steps:
 1. Open a web browser and navigate to `http://localhost:5173`
 2. Register or login to the application
-3. Browse through the available restaurants and shops
+3. Browse the available restaurants and shops
 4. Select and order food items
 5. Track the status of your order in real-time
 
@@ -52,7 +52,6 @@ To use the application, follow these steps:
 The application provides RESTful APIs for the following endpoints:
 * User authentication: `/api/auth`
 * Restaurant management: `/api/restaurants`
-* Shop management: `/api/shops`
 * Food item management: `/api/food-items`
 * Order management: `/api/orders`
 * Recommendation system: `/api/recommendations`
@@ -61,10 +60,8 @@ The application provides RESTful APIs for the following endpoints:
 The application is organized into the following folders:
 * `Backend`: Server-side application built using Node.js and Express.js
 * `Frontend`: Client-side application built using React
-* `ml-service`: Machine learning service for recommendation system
 * `config`: Configuration files for the application
 * `controllers`: Controller files for the application
-* `middlewares`: Middleware files for the application
 * `models`: Model files for the application
 * `routes`: Route files for the application
 * `services`: Service files for the application
@@ -73,21 +70,20 @@ The application is organized into the following folders:
 ## Deployment Instructions
 To deploy the application, follow these steps:
 1. Build the frontend application using `npm run build`
-2. Deploy the frontend application to a hosting platform
-3. Deploy the backend application to a cloud platform
-4. Configure the environment variables for the application
-5. Start the application using `npm start`
+2. Deploy the backend application to a cloud platform such as AWS or Google Cloud
+3. Configure the environment variables for the application
+4. Start the server using `npm start`
 
 ## Future Improvements
 The following features are planned for future development:
 * Integration with payment gateways
-* Implementation of a rating system
-* Development of a mobile application
-* Improvement of the recommendation system using machine learning algorithms
-* Enhancement of the user interface and user experience
+* Implementation of a rating system for restaurants and food items
+* Development of a mobile application for the platform
+* Integration with social media platforms for user authentication and sharing
+* Implementation of a notification system for order updates and promotions
 
-## Code of Conduct
-The Food Delivery Application adheres to the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) code of conduct. All contributors and maintainers are expected to follow the guidelines outlined in the code of conduct. Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainer at [santraakash999@gmail.com](mailto:santraakash999@gmail.com).
+### Code of Conduct
+This project adheres to the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/). By participating in this project, you agree to abide by its terms. If you have any questions or concerns, please contact the project maintainer at [santraakash999@gmail.com](mailto:santraakash999@gmail.com).
 
 
 
