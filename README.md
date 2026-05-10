@@ -45,7 +45,7 @@ To use the application, follow these steps:
 1. Open a web browser and navigate to `http://localhost:5173`
 2. Register or login to the application
 3. Browse through the available restaurants and shops
-4. Select your desired food items and place an order
+4. Select and order food items
 5. Track the status of your order in real-time
 
 ## API Overview
@@ -61,8 +61,10 @@ The application provides RESTful APIs for the following endpoints:
 The application is organized into the following folders:
 * `Backend`: Server-side application built using Node.js and Express.js
 * `Frontend`: Client-side application built using React
+* `ml-service`: Machine learning service for recommendation system
 * `config`: Configuration files for the application
 * `controllers`: Controller files for the application
+* `middlewares`: Middleware files for the application
 * `models`: Model files for the application
 * `routes`: Route files for the application
 * `services`: Service files for the application
@@ -70,131 +72,22 @@ The application is organized into the following folders:
 
 ## Deployment Instructions
 To deploy the application, follow these steps:
-1. Set up a production environment using a cloud platform such as AWS or Google Cloud
-2. Configure the database and API endpoints for the production environment
-3. Deploy the backend and frontend applications to the production environment
-4. Configure the load balancer and Socket.IO for real-time updates
+1. Build the frontend application using `npm run build`
+2. Deploy the frontend application to a hosting platform
+3. Deploy the backend application to a cloud platform
+4. Configure the environment variables for the application
+5. Start the application using `npm start`
 
 ## Future Improvements
 The following features are planned for future development:
-* Integration with payment gateways for secure transactions
-* Implementation of a rating and review system for restaurants and shops
-* Development of a mobile application for the Food Delivery Application
-* Integration with social media platforms for user authentication and sharing
-* Implementation of a machine learning-based recommendation system for personalized suggestions.
+* Integration with payment gateways
+* Implementation of a rating system
+* Development of a mobile application
+* Improvement of the recommendation system using machine learning algorithms
+* Enhancement of the user interface and user experience
 
-
-
-# Architecture Documentation
-
-
-### Application Flow
-The application flow can be described as follows:
-1. The user interacts with the frontend, which is built using React and is located in the `Frontend` directory.
-2. The frontend sends requests to the backend, which is built using Node.js and is located in the `Backend` directory.
-3. The backend processes the requests, interacts with the database, and sends responses back to the frontend.
-4. The frontend receives the responses and updates the user interface accordingly.
-5. The application also uses a machine learning service, located in the `ml-service` directory, to provide recommendations to the user.
-
-### Backend/Frontend Structure
-The backend is structured into the following directories:
-* `config`: contains configuration files, such as database connections.
-* `controllers`: contains controllers that handle requests and send responses.
-* `middlewares`: contains middleware functions that are executed before or after controllers.
-* `models`: contains database models that define the structure of the data.
-* `routes`: contains route handlers that map URLs to controllers.
-* `services`: contains services that provide additional functionality, such as recommendation services.
-* `utils`: contains utility functions that are used throughout the backend.
-
-The frontend is structured into the following directories:
-* `components`: contains reusable React components.
-* `hooks`: contains custom React hooks that provide additional functionality.
-* `lib`: contains library functions that are used throughout the frontend.
-* `pages`: contains page-level components that define the user interface.
-* `redux`: contains Redux state management code.
-* `services`: contains services that provide additional functionality, such as API calls.
-* `utils`: contains utility functions that are used throughout the frontend.
-
-### Services
-The application uses the following services:
-* **Recommendation Service**: provides recommendations to the user based on their preferences.
-* **API Service**: provides a interface to interact with the backend.
-* **Authentication Service**: handles user authentication and authorization.
-
-### Deployment Flow
-The deployment flow can be described as follows:
-1. The backend is deployed to a server, such as a cloud provider or a containerization platform.
-2. The frontend is deployed to a CDN or a web server.
-3. The machine learning service is deployed to a separate server or container.
-4. The application is configured to use environment variables or configuration files to connect to the backend and machine learning service.
-
-### Scaling Strategy
-The scaling strategy can be described as follows:
-1. **Horizontal Scaling**: the application can be scaled horizontally by adding more instances of the backend and machine learning service.
-2. **Vertical Scaling**: the application can be scaled vertically by increasing the resources (such as CPU and memory) of the backend and machine learning service instances.
-3. **Load Balancing**: the application can use load balancing to distribute traffic across multiple instances of the backend and machine learning service.
-4. **Caching**: the application can use caching to reduce the load on the backend and machine learning service.
-
-### Mermaid Diagrams
-```mermaid
-graph LR
-    A[User] -->|Interacts with|> B[Frontend]
-    B -->|Sends request to|> C[Backend]
-    C -->|Processes request|> D[Database]
-    D -->|Returns data|> C
-    C -->|Returns response|> B
-    B -->|Updates UI|> A
-```
-
-```mermaid
-graph LR
-    A[Frontend] -->|Uses|> B[Components]
-    B -->|Uses|> C[Hooks]
-    C -->|Uses|> D[Lib]
-    D -->|Uses|> E[Pages]
-    E -->|Uses|> F[Redux]
-    F -->|Uses|> G[Services]
-    G -->|Uses|> H[Utils]
-```
-
-```mermaid
-graph LR
-    A[Backend] -->|Uses|> B[Config]
-    B -->|Uses|> C[Controllers]
-    C -->|Uses|> D[Middlewares]
-    D -->|Uses|> E[Models]
-    E -->|Uses|> F[Routes]
-    F -->|Uses|> G[Services]
-    G -->|Uses|> H[Utils]
-```
-
-```mermaid
-graph LR
-    A[Machine Learning Service] -->|Provides|> B[Recommendations]
-    B -->|To|> C[Frontend]
-    C -->|Uses|> D[API Service]
-    D -->|To|> E[Backend]
-    E -->|Processes|> F[Request]
-    F -->|Returns|> G[Response]
-    G -->|To|> C
-```
-
-```mermaid
-graph LR
-    A[Deployment] -->|Deploys|> B[Backend]
-    B -->|Deploys|> C[Frontend]
-    C -->|Deploys|> D[Machine Learning Service]
-    D -->|Configures|> E[Environment Variables]
-    E -->|Configures|> F[Configuration Files]
-```
-
-```mermaid
-graph LR
-    A[Scaling] -->|Scales|> B[Horizontally]
-    B -->|Scales|> C[Vertically]
-    C -->|Uses|> D[Load Balancing]
-    D -->|Uses|> E[Caching]
-```
+## Code of Conduct
+The Food Delivery Application adheres to the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) code of conduct. All contributors and maintainers are expected to follow the guidelines outlined in the code of conduct. Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainer at [santraakash999@gmail.com](mailto:santraakash999@gmail.com).
 
 
 
